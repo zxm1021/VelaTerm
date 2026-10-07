@@ -712,6 +712,7 @@ const zhCN: typeof en = {
   "settings.scScreenshotHint":
     "在任何应用中都能使用，VelaTerm 在后台时同样有效。如需关闭，点一下快捷键后按 Delete 键。",
   "settings.scConflictTabs": "已用于切换标签页",
+  "settings.scConflictClear": "已用于清空终端",
   "settings.scInUse": "该快捷键已被其他应用占用",
   "settings.scReset": "恢复默认",
   "settings.scConflict": (label: string) => `已被「${label}」占用`,

@@ -726,6 +726,7 @@ const fr: typeof en = {
   "settings.scScreenshotHint":
     "Fonctionne dans toutes les apps, même lorsque VelaTerm est en arrière-plan. Pour le désactiver, cliquez dessus puis appuyez sur Suppr.",
   "settings.scConflictTabs": "Déjà utilisé pour changer d’onglet",
+  "settings.scConflictClear": "Déjà utilisé pour effacer le terminal",
   "settings.scInUse": "Ce raccourci est déjà utilisé par une autre app",
   "settings.scReset": "Rétablir les valeurs par défaut", // Restore defaults
   "settings.scConflict": (label: string) => `Déjà utilisé par « ${label} »`, // conflict

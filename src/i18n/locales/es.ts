@@ -726,6 +726,7 @@ const es: typeof en = {
   "settings.scScreenshotHint":
     "Funciona en cualquier app, incluso con VelaTerm en segundo plano. Para desactivarlo, haz clic en él y pulsa Supr.",
   "settings.scConflictTabs": "Ya se usa para cambiar de pestaña",
+  "settings.scConflictClear": "Ya se usa para limpiar el terminal",
   "settings.scInUse": "Otra app ya usa este atajo",
   "settings.scReset": "Restaurar valores predeterminados", // Restore defaults
   "settings.scConflict": (label: string) => `Ya lo usa "${label}"`, // conflict

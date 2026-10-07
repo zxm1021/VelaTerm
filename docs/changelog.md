@@ -7,6 +7,12 @@ v0.1.91 is the first public release; earlier version numbers were internal itera
 
 ---
 
+## Unreleased
+
+### Terminal
+
+- **⌘K clears the active terminal.** The active terminal's buffer and scrollback are cleared and focus returns to it, matching the context menu's “Clear” action. The key is fixed and cannot be rebound. On Windows, Linux and in browser clients Ctrl+K is left untouched, because it is the shell's kill-line key.
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ Rename with AI remembers your selected model and reasoning effort for each agent.

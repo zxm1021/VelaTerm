@@ -723,6 +723,7 @@ const ko: typeof en = {
   "settings.scScreenshotHint":
     "VelaTerm이 백그라운드에 있어도 모든 앱에서 사용할 수 있습니다. 끄려면 단축키를 클릭한 다음 Delete 키를 누르세요.",
   "settings.scConflictTabs": "이미 탭 전환에 사용 중",
+  "settings.scConflictClear": "이미 터미널 지우기에 사용 중",
   "settings.scInUse": "다른 앱에서 이미 사용 중인 단축키입니다",
   "settings.scReset": "기본값 복원", // Restore defaults
   "settings.scConflict": (label: string) => `이미 "${label}"에서 사용 중`, // conflict

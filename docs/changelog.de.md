@@ -1,3 +1,9 @@
+## Unreleased
+
+### Terminal
+
+- **⌘K leert das aktive Terminal.** Der Puffer und der Verlauf des aktiven Terminals werden geleert, und der Fokus kehrt dorthin zurück — wie beim Kontextmenü „Leeren“. Die Taste ist fest und lässt sich nicht ändern. Unter Windows, Linux und in Browser-Clients bleibt Ctrl+K unberührt, da es dort die Kill-Line-Taste der Shell ist.
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ Beim Umbenennen mit KI werden das gewählte Modell und die Denkintensität für jeden Agenten gespeichert.

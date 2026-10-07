@@ -2,7 +2,7 @@
 
 Created: 2026-07-09 20:41
 
-Updated: 2026-09-25 10:21
+Updated: 2026-10-07
 
 > This chapter covers the terminal itself: input and output, in-terminal search, copy and paste, image paste, command suggestions, the built-in `v` commands, background commands started with `vrun`, shell selection on Windows, session recording, renderer settings and shortcuts.
 
@@ -96,7 +96,7 @@ Settings ▸ Advanced ▸ "Terminal renderer" offers DOM (default) and WebGL. DO
 
 ## 10. Common shortcuts
 
-The table lists the defaults of the macOS desktop app. The Windows and Linux apps use Ctrl+Alt instead of ⌘ for most actions (split down is Ctrl+Alt+E, search all sessions is Ctrl+Alt+G, select all is Ctrl+Shift+A, and save stays Ctrl+S). Browser clients use Ctrl-based defaults that avoid the browser's own shortcuts. Settings ▸ Shortcuts shows the exact bindings on your system, and every action except tab switching and font size can be changed there.
+The table lists the defaults of the macOS desktop app. The Windows and Linux apps use Ctrl+Alt instead of ⌘ for most actions (split down is Ctrl+Alt+E, search all sessions is Ctrl+Alt+G, select all is Ctrl+Shift+A, and save stays Ctrl+S). Browser clients use Ctrl-based defaults that avoid the browser's own shortcuts. Settings ▸ Shortcuts shows the exact bindings on your system, and every action except tab switching, font size and clearing the terminal can be changed there.
 
 | Action | Shortcut |
 |--------|----------|
@@ -112,3 +112,4 @@ The table lists the defaults of the macOS desktop app. The Windows and Linux app
 | Save document | ⌘S |
 | Go to tab N | ⌘1–9 (fixed; Ctrl+1–9 outside the macOS desktop app) |
 | Terminal font larger / smaller / reset | ⌘+ / ⌘- / ⌘0 (fixed; Ctrl+ / Ctrl- / Ctrl+0 outside the macOS desktop app) |
+| Clear the terminal | ⌘K (fixed; macOS only — elsewhere Ctrl+K stays the shell's kill-line key) |

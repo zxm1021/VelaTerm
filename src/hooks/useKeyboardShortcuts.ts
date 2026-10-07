@@ -1,6 +1,8 @@
 //! Global keyboard shortcuts.
 //! - Cmd/Ctrl+1–9 focuses the numbered open tab and is fixed to tab positions.
 //! - Cmd/Ctrl++/-/0 changes or resets terminal font size and is fixed to those semantics.
+//! - Cmd+K clears the active terminal on macOS and is fixed to that key; elsewhere Ctrl+K stays the
+//!   shell's kill-line key.
 //! - Settings may remap temporary-terminal creation, desktop browser tabs, pane/tab closure, both
 //!   split directions, terminal/global search, terminal selection, and document save. Defaults live in shortcutRegistry
 //!   and overrides in vlx-settings. Remapping changes only triggers, not contextual behavior.
@@ -24,9 +26,10 @@ import { isShareSurface } from "../ipc/shareBase";
 import { env } from "../platform";
 import { useTermStore } from "../store/termStore";
 import { activeAgentLocation, agentPickerUrl, navigateAgentPicker, newAgentPickerRoute, readAgentPickerRoute } from "../layout/NewAgentSession/navigation";
-import { getTerminal, selectAll as selectAllTerminalContent } from "../terminal/registry";
+import { clearTerminal, focusTerminal, getTerminal, selectAll as selectAllTerminalContent } from "../terminal/registry";
 import {
   DEFAULT_BINDINGS,
+  IS_MAC,
   hasMod,
   matchCombo,
   type ShortcutAction,
@@ -39,6 +42,15 @@ export function useKeyboardShortcuts() {
       if (e.key >= "1" && e.key <= "9") return Number(e.key) - 1;
       if (/^Digit[1-9]$/.test(e.code)) return Number(e.code.slice(5)) - 1;
       return -1;
+    };
+
+    // The active tab's session ID when it is a session tab, or null for document, browser, and task
+    // tabs. Shared by the fixed shortcuts that must act on a terminal only.
+    const activeSessionTabId = (): string | null => {
+      const { activeSessionId, activeTabId, docTabs, browserTabs, taskTabs } = useTermStore.getState();
+      if (!activeSessionId) return null;
+      if (activeTabId && (docTabs[activeTabId] || browserTabs[activeTabId] || taskTabs[activeTabId])) return null;
+      return activeSessionId;
     };
 
     const handler = (e: KeyboardEvent) => {
@@ -61,18 +73,33 @@ export function useKeyboardShortcuts() {
         const isMinus = e.key === "-" || e.key === "_" || e.code === "Minus";
         const isZero = e.key === "0" || e.code === "Digit0";
         if (isPlus || isMinus || isZero) {
-          const { activeSessionId, activeTabId, docTabs, browserTabs, taskTabs, termFontSize, setTermFontSize } =
-            useTermStore.getState();
-          const onSessionTab =
-            !!activeSessionId &&
-            !(activeTabId && (docTabs[activeTabId] || browserTabs[activeTabId] || taskTabs[activeTabId]));
-          if (onSessionTab) {
+          const { termFontSize, setTermFontSize } = useTermStore.getState();
+          if (activeSessionTabId()) {
             e.preventDefault();
             if (isZero) setTermFontSize(13);
             else setTermFontSize(termFontSize + (isPlus ? 0.5 : -0.5));
           }
           return;
         }
+      }
+
+      // ── Fixed shortcut 3: Cmd+K clears the active terminal ──
+      // macOS only: elsewhere Ctrl+K is the shell's kill-line key and must reach the PTY. A bare Cmd+K
+      // carries no PTY input, so clearing is safe; focus returns to the terminal afterwards. The
+      // terminal must exist, which also keeps a conversation view (no xterm instance) untouched.
+      //
+      // This branch must return WITHOUT cancelling the event when no terminal qualifies: the markdown
+      // editor binds Mod-k to insert a link (pmTypora.ts), and a doc tab is exactly the case where this
+      // guard fails. Cancelling here would silently break that command.
+      if (IS_MAC && e.metaKey && !e.ctrlKey && !e.altKey && !e.shiftKey && e.code === "KeyK") {
+        if (e.defaultPrevented || e.isComposing || e.keyCode === 229 || e.repeat) return;
+        const id = activeSessionTabId();
+        if (id && getTerminal(id)) {
+          e.preventDefault();
+          clearTerminal(id);
+          focusTerminal(id);
+        }
+        return;
       }
 
       // ── Remappable actions: exactly match the user override or default binding ──

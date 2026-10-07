@@ -90,12 +90,13 @@ export function sameChord(inAppCombo: string, accel: string): boolean {
 
 /**
  * The in-app action this accelerator would take over, or "tabs" for the fixed Cmd/Ctrl+1–9 tab
- * switching. A global hotkey is consumed by the system before VelaTerm sees the key.
+ * switching, or "clear" for the fixed Cmd+K terminal clear. A global hotkey is consumed by the
+ * system before VelaTerm sees the key, so claiming one of these would make it unreachable.
  */
 export function inAppConflict(
   accel: string,
   overrides: Partial<Record<ShortcutAction, string>>,
-): ShortcutAction | "tabs" | null {
+): ShortcutAction | "tabs" | "clear" | null {
   const p = parse(accel);
   const target = canonical(p);
   for (const action of Object.keys(DEFAULT_BINDINGS) as ShortcutAction[]) {
@@ -103,5 +104,7 @@ export function inAppConflict(
   }
   const primary = IS_MAC ? "Cmd" : "Ctrl";
   if (/^[1-9]$/.test(p.key) && p.mods.size === 1 && p.mods.has(primary)) return "tabs";
+  // Cmd+K clears the terminal on macOS only; elsewhere Ctrl+K stays the shell's kill-line key.
+  if (IS_MAC && p.key === "K" && p.mods.size === 1 && p.mods.has("Cmd")) return "clear";
   return null;
 }

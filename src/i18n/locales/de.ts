@@ -725,6 +725,7 @@ const de: typeof en = {
   "settings.scScreenshotHint":
     "Funktioniert in jeder App, auch wenn VelaTerm im Hintergrund läuft. Zum Ausschalten klicke das Kürzel an und drücke Entf.",
   "settings.scConflictTabs": "Bereits für den Tab-Wechsel belegt",
+  "settings.scConflictClear": "Bereits für das Leeren des Terminals belegt",
   "settings.scInUse": "Dieses Kürzel wird bereits von einer anderen App verwendet",
   "settings.scReset": "Standard wiederherstellen", // Restore defaults
   "settings.scConflict": (label: string) => `Bereits belegt von „${label}“`, // conflict

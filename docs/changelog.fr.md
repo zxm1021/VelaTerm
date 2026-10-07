@@ -1,3 +1,9 @@
+## Unreleased
+
+### Terminal
+
+- **⌘K efface le terminal actif.** Le tampon et l'historique du terminal actif sont effacés et le focus y revient, comme l'action « Effacer » du menu contextuel. La touche est fixe et ne peut pas être réaffectée. Sous Windows, Linux et dans les clients navigateur, Ctrl+K reste intact, car c'est la touche kill-line du shell.
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ Le renommage par IA mémorise le modèle et le niveau de raisonnement choisis pour chaque agent.

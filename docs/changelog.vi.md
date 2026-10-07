@@ -1,3 +1,9 @@
+## Unreleased
+
+### Thiết bị đầu cuối
+
+- **⌘K xóa thiết bị đầu cuối đang hoạt động.** Bộ đệm và lịch sử cuộn của thiết bị đầu cuối đang hoạt động được xóa và tiêu điểm quay lại đó, giống thao tác “Xóa” trong menu ngữ cảnh. Phím này cố định và không thể gán lại. Trên Windows, Linux và ứng dụng khách trình duyệt, Ctrl+K được giữ nguyên vì đó là phím kill-line của shell.
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ Tính năng đổi tên bằng AI ghi nhớ mô hình và mức độ suy luận đã chọn cho từng tác nhân.

@@ -37,6 +37,10 @@ describe("conflicts with in-app shortcuts", () => {
     expect(inAppConflict(`${primary}+3`, {})).toBe("tabs");
   });
 
+  it("detects the fixed terminal-clear key on macOS only", () => {
+    expect(inAppConflict("Cmd+K", {})).toBe(IS_MAC ? "clear" : null);
+  });
+
   it("detects an overridden in-app binding regardless of modifier order", () => {
     expect(inAppConflict(`Shift+${primary}+K`, { search: "mod+shift+k" })).toBe("search");
     expect(sameChord("mod+shift+k", `Shift+${primary}+K`)).toBe(true);

@@ -725,6 +725,7 @@ const en = {
   "settings.scScreenshotHint":
     "Works in any app, even when VelaTerm is in the background. To turn it off, click it and press Delete.",
   "settings.scConflictTabs": "Already used for switching tabs",
+  "settings.scConflictClear": "Already used for clearing the terminal",
   "settings.scInUse": "Another app is already using this shortcut",
   "settings.scReset": "Restore defaults",
   "settings.scConflict": (label: string) => `Already used by "${label}"`,

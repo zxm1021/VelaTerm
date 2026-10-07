@@ -170,7 +170,13 @@ export function ShortcutsPanel() {
     setRecording(null);
     const clash = accel ? inAppConflict(accel, overrides) : null;
     if (clash) {
-      setShotErr(clash === "tabs" ? t("settings.scConflictTabs") : t("settings.scConflict", t(SC_LABEL[clash])));
+      setShotErr(
+        clash === "tabs"
+          ? t("settings.scConflictTabs")
+          : clash === "clear"
+            ? t("settings.scConflictClear")
+            : t("settings.scConflict", t(SC_LABEL[clash])),
+      );
       return;
     }
     setShotErr(null);

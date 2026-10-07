@@ -13,7 +13,9 @@ const state = vi.hoisted(() => ({
   projects: [], groups: [], sessions: [], inspectTarget: null, selection: [],
 }));
 
-const terminalRegistry = vi.hoisted(() => ({ getTerminal: vi.fn(), selectAll: vi.fn() }));
+const terminalRegistry = vi.hoisted(() => ({
+  getTerminal: vi.fn(), selectAll: vi.fn(), clearTerminal: vi.fn(), focusTerminal: vi.fn(),
+}));
 vi.mock("../terminal/registry", () => terminalRegistry);
 vi.mock("../platform", () => ({ env: { isBrowser: true, isRemoteWindow: false } }));
 vi.mock("../ipc/transport", () => ({ isTauri: false }));
@@ -29,6 +31,8 @@ beforeEach(async () => {
   state.taskTabs = {};
   state.shortcutOverrides = {};
   terminalRegistry.getTerminal.mockReset();
+  terminalRegistry.clearTerminal.mockReset();
+  terminalRegistry.focusTerminal.mockReset();
   window.history.replaceState(null, "", "/");
   const { useKeyboardShortcuts } = await import("./useKeyboardShortcuts");
   renderHook(() => useKeyboardShortcuts());
@@ -174,6 +178,63 @@ it("preserves an older action rebound onto the new action's default", () => {
   expect(press("n", { ctrlKey: true, altKey: true }).defaultPrevented).toBe(true);
   expect(state.newScratchTab).toHaveBeenCalledOnce();
   expect(new URLSearchParams(window.location.search).has("newAgent")).toBe(false);
+});
+
+it("clears the active terminal on Cmd+K and returns focus to it", () => {
+  terminalRegistry.getTerminal.mockReturnValue({});
+  expect(press("k", { metaKey: true }).defaultPrevented).toBe(true);
+  expect(terminalRegistry.clearTerminal).toHaveBeenCalledExactlyOnceWith("session-1");
+  expect(terminalRegistry.focusTerminal).toHaveBeenCalledExactlyOnceWith("session-1");
+});
+
+it("leaves Ctrl+K to the shell on every platform", () => {
+  terminalRegistry.getTerminal.mockReturnValue({});
+  expect(press("k", { ctrlKey: true }).defaultPrevented).toBe(false);
+  expect(press("k", { metaKey: true, shiftKey: true }).defaultPrevented).toBe(false);
+  expect(press("k", { metaKey: true, altKey: true }).defaultPrevented).toBe(false);
+  expect(terminalRegistry.clearTerminal).not.toHaveBeenCalled();
+});
+
+it.each(["docTabs", "browserTabs", "taskTabs"] as const)("does not clear a terminal from a %s tab", (tabs) => {
+  terminalRegistry.getTerminal.mockReturnValue({});
+  state.activeTabId = "other-tab";
+  state[tabs] = { "other-tab": {} };
+  expect(press("k", { metaKey: true }).defaultPrevented).toBe(false);
+  expect(terminalRegistry.clearTerminal).not.toHaveBeenCalled();
+});
+
+it("does not clear a conversation view, which has no xterm instance", () => {
+  // A chat-engine session mounts no terminal, so getTerminal reports none.
+  terminalRegistry.getTerminal.mockReturnValue(undefined);
+  expect(press("k", { metaKey: true }).defaultPrevented).toBe(false);
+  expect(terminalRegistry.clearTerminal).not.toHaveBeenCalled();
+});
+
+it("lets Cmd+K reach the document editor's own Mod-k binding on a doc tab", () => {
+  // The markdown editor binds Mod-k to insert a link. Clearing must not swallow the event there.
+  terminalRegistry.getTerminal.mockReturnValue({});
+  state.activeTabId = "doc-1";
+  state.docTabs = { "doc-1": {} };
+  const downstream = vi.fn();
+  document.body.addEventListener("keydown", downstream);
+  expect(press("k", { metaKey: true }).defaultPrevented).toBe(false);
+  expect(downstream).toHaveBeenCalledOnce();
+  expect(terminalRegistry.clearTerminal).not.toHaveBeenCalled();
+  document.body.removeEventListener("keydown", downstream);
+});
+
+it("ignores IME composition and repeats when clearing", () => {
+  terminalRegistry.getTerminal.mockReturnValue({});
+  for (const extra of [{ isComposing: true }, { keyCode: 229 }, { repeat: true }]) {
+    expect(press("k", { metaKey: true, ...extra }).defaultPrevented).toBe(false);
+  }
+  expect(terminalRegistry.clearTerminal).not.toHaveBeenCalled();
+});
+
+it("does not clear when there is no active session", () => {
+  state.activeSessionId = null;
+  expect(press("k", { metaKey: true }).defaultPrevented).toBe(false);
+  expect(terminalRegistry.clearTerminal).not.toHaveBeenCalled();
 });
 
 it("switches tabs with mod+digit but leaves mod+Alt+digit to editors", () => {

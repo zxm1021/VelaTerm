@@ -2,7 +2,7 @@
 
 Created: 2026-07-09 20:41
 
-Updated: 2026-09-25 10:21
+Updated: 2026-10-07
 
 > Settings open from the gear button in the title bar. On macOS the app menu also has "Settings…" (⌘,); on Windows and Linux, press Alt and choose File ▸ Settings…. The settings window has eight categories: General, Appearance, Terminal, Conversation view, Behavior, Advanced, Agents and Shortcuts. This chapter describes each item and ends with the default key bindings. Settings are shared between the desktop app and browser clients connected to it.
 
@@ -116,7 +116,7 @@ Click an action's key combination, then press the new combination; Escape cancel
 
 **Regular browsers.** When you use VelaTerm in a regular browser (URL remote access), the browser itself uses many ⌘ and Ctrl combinations, so the Windows and Linux bindings above apply on every system, and the settings page shows them that way. The exception is a browser on macOS, where split right and split down stay ⌘D and ⌘⇧D. Remote-connection windows of the desktop app use the desktop bindings.
 
-**Fixed keys** that cannot be changed: ⌘1–9 switches tabs, and ⌘+ / ⌘- / ⌘0 changes or resets the terminal font size (Ctrl on Windows, Linux and in browsers).
+**Fixed keys** that cannot be changed: ⌘1–9 switches tabs, ⌘+ / ⌘- / ⌘0 changes or resets the terminal font size (Ctrl on Windows, Linux and in browsers), and ⌘K clears the active terminal (macOS only; elsewhere Ctrl+K remains the shell's kill-line key).
 
 **Terminal selection.** Select all applies only while a terminal has keyboard focus. Text fields and conversation views retain their normal selection behavior. Plain Ctrl+A remains available to the shell unless you explicitly assign it to this action.
 

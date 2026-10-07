@@ -726,6 +726,7 @@ const ptBR: typeof en = {
   "settings.scScreenshotHint":
     "Funciona em qualquer app, mesmo com o VelaTerm em segundo plano. Para desativar, clique no atalho e pressione Delete.",
   "settings.scConflictTabs": "Já usado para alternar entre abas",
+  "settings.scConflictClear": "Já usado para limpar o terminal",
   "settings.scInUse": "Outro app já está usando este atalho",
   "settings.scReset": "Restaurar padrões", // Restore defaults
   "settings.scConflict": (label: string) => `Já usado por "${label}"`, // conflict
