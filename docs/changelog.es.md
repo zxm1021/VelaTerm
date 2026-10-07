@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Espacio de trabajo
+
+- **El visor de cambios ocupa toda la ventana y muestra el diff de tres maneras.** Antes se abría como un panel flotante limitado a 1040×720, que desperdiciaba un margen por cada lado de lo único que uno abre para leer. Ahora cubre toda la ventana, y tres controles en su cabecera determinan la comparación: qué contenido se muestra (ambos lados comparados, o solo el archivo antiguo o el nuevo), cuánto contexto sin cambios se conserva alrededor de cada cambio (3 líneas, 20 líneas o el archivo completo) y si la comparación se divide en dos columnas o se fusiona en una con las líneas eliminadas insertadas sobre sus sustitutas. Pulsa `/` para alternar entre las vistas dividida y fusionada sin soltar el teclado, y Esc o ⌘W para cerrar: ⌘W cierra el visor y no el panel que hay detrás, que es lo que hacía antes. Las tres opciones se recuerdan la próxima vez que lo abras.
+
 ### Terminal
 
 - **⌘B, ⌘0 y ⇧⌘Enter muestran u ocultan los paneles laterales.** ⌘B alterna la barra lateral, ⌘0 el panel de información y ⇧⌘Enter oculta ambos a la vez, o los recupera cuando ya están ocultos. Coinciden con los botones de la barra de título. Las teclas son fijas y no se pueden cambiar. El restablecimiento del tamaño de fuente pasa a ⇧⌘0 para dejar libre ⌘0; fuera de la app de escritorio para macOS sigue en Ctrl+0, ya que estas combinaciones solo usan Cmd y no ocupan ninguna tecla Ctrl pura del shell. Los campos de texto y los editores conservan sus propios atajos, así que ⌘B sigue poniendo el texto en negrita en el editor de Markdown.

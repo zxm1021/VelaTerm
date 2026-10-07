@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Espace de travail
+
+- **La visionneuse de modifications remplit la fenêtre et présente le diff de trois façons.** Elle s'ouvrait auparavant comme un panneau flottant limité à 1040×720, gaspillant une marge de chaque côté de la seule chose pour laquelle on l'ouvre. Elle occupe désormais toute la fenêtre, et trois contrôles dans son en-tête déterminent la comparaison : le contenu affiché (les deux côtés comparés, ou seulement l'ancien ou le nouveau fichier), la quantité de contexte inchangé conservée autour de chaque modification (3 lignes, 20 lignes ou le fichier entier), et le fait que la comparaison soit divisée en deux colonnes ou fusionnée en une seule, les lignes supprimées étant insérées au-dessus de leurs remplaçantes. Appuyez sur `/` pour basculer entre les vues divisée et fusionnée sans quitter le clavier, et sur Échap ou ⌘W pour fermer — ⌘W ferme la visionneuse et non le panneau situé derrière, ce qu'il faisait auparavant. Les trois choix sont mémorisés pour la prochaine ouverture.
+
 ### Terminal
 
 - **⌘B, ⌘0 et ⇧⌘Entrée affichent ou masquent les panneaux latéraux.** ⌘B bascule la barre latérale, ⌘0 le panneau d’informations, et ⇧⌘Entrée masque les deux d’un coup — ou les rétablit lorsqu’ils sont déjà masqués. Ils correspondent aux boutons de la barre de titre. Ces touches sont fixes et ne peuvent pas être modifiées. La réinitialisation de la taille de police passe à ⇧⌘0 pour libérer ⌘0 ; en dehors de l’application de bureau macOS, elle reste sur Ctrl+0, car ces combinaisons n’utilisent que Cmd et n’occupent aucune touche Ctrl seule du shell. Les champs de texte et les éditeurs conservent leurs propres raccourcis : ⌘B met donc toujours le texte en gras dans l’éditeur Markdown.

@@ -551,6 +551,14 @@ const en = {
   "changes.selectFile": "Select a file to view",
   "changes.binary": "Binary file — line diff unavailable",
   "changes.commitTitle": (hash: string) => `Commit ${hash}`,
+  "changes.contentBoth": "Both",
+  "changes.contentOld": "Old",
+  "changes.contentNew": "New",
+  "changes.context3": "3 lines",
+  "changes.context20": "20 lines",
+  "changes.contextAll": "Full",
+  "changes.layoutSplit": "Split",
+  "changes.layoutUnified": "Unified",
 
   // ── Git panel ──
   "git.staged": "Staged",

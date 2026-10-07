@@ -1,7 +1,7 @@
-//! Shared CodeMirror colors, highlighting, and language loading for the ChangesModal diff view.
-//! The theme uses Vlinx CSS variables and follows light/dark mode automatically; the highlight map uses the
-//! five-color palette plus text-hierarchy variables. SourceEditor.tsx currently carries an equivalent definition
-//! that can later be consolidated into this module.
+//! Shared CodeMirror colors, highlighting, language loading, and layout extensions for the ChangesModal
+//! diff view. The theme uses Vlinx CSS variables and follows light/dark mode automatically; the highlight
+//! map uses the five-color palette plus text-hierarchy variables. SourceEditor.tsx currently carries an
+//! equivalent definition that can later be consolidated into this module.
 
 import {
   HighlightStyle,
@@ -69,6 +69,21 @@ export const vlxCmTheme = EditorView.theme({
 /** Highlight and theme extensions shared by both sides of a diff. */
 export function vlxCmHighlighting(): Extension {
   return [syntaxHighlighting(vlxHighlight), vlxCmTheme];
+}
+
+/**
+ * Make a standalone editor fill its container instead of growing to its content height.
+ *
+ * A MergeView cannot use this: it sizes both editors to their content so the two sides scroll together,
+ * and a 100% height would break that alignment. Single-editor views — a one-sided file or the merged
+ * column — have no sibling to align with and must fill the pane, or a short file leaves the scroller
+ * shorter than the modal and the background shows through below it.
+ */
+export function vlxCmFillHeight(): Extension {
+  return EditorView.theme({
+    "&": { height: "100%" },
+    ".cm-scroller": { overflow: "auto" },
+  });
 }
 
 /** Match a language by filename and load its extension asynchronously; return null for plain text on no match or load failure. */

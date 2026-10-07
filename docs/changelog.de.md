@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Arbeitsbereich
+
+- **Die Änderungsansicht füllt das Fenster und zeigt einen Diff auf drei Arten.** Bisher öffnete sie sich als schwebendes Panel mit maximal 1040×720 und verschenkte an allen Seiten Rand von dem einen, wofür man sie öffnet. Jetzt bedeckt sie das ganze Fenster, und drei Bedienelemente in der Kopfzeile bestimmen den Vergleich: welcher Inhalt gezeigt wird (beide Seiten im Vergleich oder nur die alte bzw. neue Datei), wie viel unveränderter Kontext um jede Änderung erhalten bleibt (3 Zeilen, 20 Zeilen oder die ganze Datei) und ob der Vergleich in zwei Spalten geteilt oder in einer Spalte zusammengeführt wird, wobei gelöschte Zeilen oberhalb ihres Ersatzes stehen. Mit `/` wechselt man zwischen geteilter und zusammengeführter Ansicht, ohne die Tastatur zu verlassen, mit Esc oder ⌘W wird geschlossen — ⌘W schließt die Ansicht selbst und nicht mehr das Panel dahinter. Die drei Einstellungen werden für das nächste Öffnen gemerkt.
+
 ### Terminal
 
 - **⌘B, ⌘0 und ⇧⌘Enter blenden die Seitenleisten ein oder aus.** ⌘B schaltet die Seitenleiste um, ⌘0 das Info-Panel, und ⇧⌘Enter blendet beide gleichzeitig aus — oder holt beide zurück, wenn sie bereits ausgeblendet sind. Sie entsprechen den Schaltflächen in der Titelleiste. Die Tasten sind fest und lassen sich nicht ändern. Das Zurücksetzen der Schriftgröße ist auf ⇧⌘0 umgezogen, damit ⌘0 frei wird; außerhalb der macOS-Desktop-App bleibt es bei Ctrl+0, da diese Kombinationen nur mit Cmd gelten und keine reine Ctrl-Taste der Shell belegen. Textfelder und Editoren behalten ihre eigenen Belegungen, ⌘B fettet im Markdown-Editor also weiterhin Text.

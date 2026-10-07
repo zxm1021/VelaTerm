@@ -9,6 +9,10 @@ v0.1.91 is the first public release; earlier version numbers were internal itera
 
 ## Unreleased
 
+### Workspace
+
+- **The changes viewer fills the window and can show a diff three different ways.** It opened as a floating panel capped at 1040×720, which wasted a margin on every side of the one thing you opened it to read. It now covers the whole window, and three controls in its header shape the comparison: which content to show (both sides compared, or just the old or the new file), how much unchanged context to keep around each change (3 lines, 20 lines, or the entire file), and whether the comparison is split into two columns or merged into one with deleted lines inlined above their replacements. Press `/` to flip between the split and merged layouts without leaving the keyboard, and Esc or ⌘W to close — ⌘W closes the viewer rather than the pane behind it, which is what it used to do. The three choices are remembered for the next time you open it.
+
 ### Terminal
 
 - **The terminal opens in Maple Mono at size 18.** Both are defaults, not fixed choices: the Settings font and size fields still override them, and ⇧⌘0 returns the size to 18. The conversation view and the rest of the UI keep JetBrains Mono. Maple Mono ships with the app, so no installation is needed, and it covers box drawing and block characters at its own advance, which keeps TUI frames and progress bars aligned.

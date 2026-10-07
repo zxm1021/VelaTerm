@@ -67,6 +67,8 @@ The **Git** submenu of a session or group whose directory is a git repository co
 | "Copy worktree path", "Open worktree folder" | Available for sessions and groups bound to a worktree |
 | "Delete worktree…" | Choose a worktree of this repository and delete its directory from disk; "Force delete (discard uncommitted changes)" removes it even with uncommitted changes |
 
+The changes viewer fills the window. Three controls in its header shape the comparison: which content to show (both sides compared, or just the old or the new file), how much unchanged context to keep around each change (3 lines, 20 lines, or the whole file), and whether the comparison is split into two columns or merged into one with deleted lines inlined above their replacements. Press `/` to flip between the split and merged layouts and Esc or ⌘W to close — ⌘W closes the viewer rather than the pane behind it. The choices are remembered for the next time you open it. Opening it from a commit in the Git panel's history shows that commit instead of the working tree.
+
 After a bound worktree has been deleted, the session or group menu offers "Convert to normal session" or "Convert to normal group", which removes the binding so the session starts in the project directory again.
 
 When you delete a session that has worktrees in its subtree, the confirmation offers to remove those worktrees as well.

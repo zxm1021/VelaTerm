@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Área de trabalho
+
+- **O visualizador de alterações ocupa a janela inteira e mostra o diff de três formas.** Antes ele abria como um painel flutuante limitado a 1040×720, desperdiçando uma margem em cada lado da única coisa pela qual você o abre. Agora cobre toda a janela, e três controles no cabeçalho definem a comparação: qual conteúdo exibir (os dois lados comparados, ou apenas o arquivo antigo ou o novo), quanta parte inalterada manter ao redor de cada alteração (3 linhas, 20 linhas ou o arquivo inteiro) e se a comparação é dividida em duas colunas ou fundida em uma só, com as linhas removidas inseridas acima de suas substitutas. Pressione `/` para alternar entre os modos dividido e fundido sem tirar as mãos do teclado, e Esc ou ⌘W para fechar — ⌘W fecha o visualizador, e não o painel atrás dele, que era o que fazia antes. As três escolhas são lembradas na próxima vez que você abrir.
+
 ### Terminal
 
 - **⌘B, ⌘0 e ⇧⌘Enter mostram ou ocultam os painéis laterais.** ⌘B alterna a barra lateral, ⌘0 o painel de informações e ⇧⌘Enter oculta os dois de uma vez — ou traz ambos de volta quando já estão ocultos. Correspondem aos botões da barra de título. As teclas são fixas e não podem ser alteradas. A redefinição do tamanho da fonte passou para ⇧⌘0 para liberar ⌘0; fora do app de desktop para macOS, continua em Ctrl+0, pois essas combinações são só com Cmd e não tomam nenhuma tecla Ctrl pura do shell. Campos de texto e editores mantêm seus próprios atalhos, então ⌘B continua colocando o texto em negrito no editor de Markdown.
