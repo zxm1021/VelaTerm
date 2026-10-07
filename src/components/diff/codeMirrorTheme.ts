@@ -2,6 +2,9 @@
 //! diff view. The theme uses Vlinx CSS variables and follows light/dark mode automatically; the highlight
 //! map uses the five-color palette plus text-hierarchy variables. SourceEditor.tsx currently carries an
 //! equivalent definition that can later be consolidated into this module.
+//!
+//! `vlxMergeDiffTheme` additionally overrides the merge view's own diff colors, which do not follow the
+//! app theme on their own; see its comment for why.
 
 import {
   HighlightStyle,
@@ -52,7 +55,9 @@ export const vlxHighlight = HighlightStyle.define([
 /** Base CodeMirror theme using Vlinx variables, a transparent background, and automatic light/dark mode. */
 export const vlxCmTheme = EditorView.theme({
   "&": {
-    fontSize: "12.5px",
+    // One step above the app's 12.5px UI default: a diff is read line by line against a line number, and the
+    // extra size is what keeps the two sides comfortable to scan. Only the diff modal uses this theme.
+    fontSize: "13.5px",
     backgroundColor: "transparent",
     color: "var(--text)",
   },
@@ -86,8 +91,106 @@ export function vlxCmFillHeight(): Extension {
   });
 }
 
-/** Match a language by filename and load its extension asynchronously; return null for plain text on no match or load failure. */
-export async function languageExtensionFor(
+/**
+ * GitHub-style diff colors for the merge view, in the spirit of the diff2html theme used elsewhere in the
+ * Vlinx tooling.
+ *
+ * Two problems make this necessary. First, the merge view's own defaults are a muted brown/tan
+ * (`rgba(160, 128, 100, .08)` for deletions, `rgba(100, 160, 128, .08)` for insertions) rather than the red
+ * and green a diff is read by, and nothing in this module ever replaced them. Second, the merge view picks
+ * between its light and dark palettes through CodeMirror's `darkTheme` facet, which this app never sets:
+ * its editors follow `[data-theme]` instead, so a dark window was being shown the light palette.
+ *
+ * The app's scheme is therefore keyed off `[data-theme]` directly. That prefix is not decoration: the merge
+ * view injects its own base theme into the same shared extension list, *after* the caller's extensions, and
+ * a theme injected later wins at equal specificity. Writing a bare `&.cm-merge-a` selector would therefore
+ * lose to the brown default it means to replace. The attribute prefix raises specificity above it.
+ *
+ * Color values follow the diff2html palette: `#fee8e9`/`#dfd` on light, and GitHub's translucent
+ * `rgba(248, 81, 73, …)`/`rgba(46, 160, 67, …)` on dark. Those alphas are tuned for GitHub's `#0d1117`
+ * canvas, which is much darker than this app's `--bg-0`, so the dark values are composed with `color-mix`
+ * against the real background instead: the same hue, at a weight that stays legible here.
+ *
+ * Every selector spells out its own `&`, even where a plain class would read better. CodeMirror only
+ * substitutes the theme class into a selector that contains `&`; without one it falls back to prefixing the
+ * whole selector with the editor's class, which turns `[data-theme='dark'] .cm-x` into "a dark element
+ * *inside* the editor" — a selector that never matches, since the attribute sits on `documentElement`.
+ * `&` must therefore follow the `[data-theme]` ancestor part and stay glued to the class it modifies.
+ */
+export const vlxMergeDiffTheme = EditorView.theme({
+  // Whole changed lines. `cm-merge-a` is the original side, `cm-merge-b` the modified one; the unified
+  // merge view also carries `cm-merge-b`, so its inlined deletions are handled separately below.
+  "&.cm-merge-a .cm-changedLine": { backgroundColor: "#fee8e9" },
+  "&.cm-merge-b .cm-changedLine": { backgroundColor: "#dfd" },
+  "[data-theme='dark'] &.cm-merge-a .cm-changedLine": {
+    backgroundColor: "color-mix(in srgb, #f85149 16%, var(--bg-0))",
+  },
+  "[data-theme='dark'] &.cm-merge-b .cm-changedLine": {
+    backgroundColor: "color-mix(in srgb, #3fb950 16%, var(--bg-0))",
+  },
+
+  // The characters that actually changed within a line. diff2html only colors whole lines, but CodeMirror
+  // already computes the character-level range, so the distinction comes for free.
+  //
+  // These set `background` rather than `background-color`. The merge view marks changed characters with a
+  // 2px gradient bar pinned to the bottom of the span (`background: linear-gradient(…) center bottom /
+  // 100% 2px no-repeat`), which reads as an underline. Cascade resolves per longhand, so setting only
+  // `background-color` left that rule's `background-image` in place and the bar kept painting over the new
+  // color. The shorthand resets every background sub-property at once, which drops the bar.
+  "&.cm-merge-a .cm-changedText": { background: "#ffb6ba" },
+  "&.cm-merge-b .cm-changedText": { background: "#97f295" },
+  "& .cm-deletedChunk .cm-deletedText": { background: "#ffb6ba" },
+  "[data-theme='dark'] &.cm-merge-a .cm-changedText": {
+    background: "color-mix(in srgb, #f85149 34%, var(--bg-0))",
+  },
+  "[data-theme='dark'] &.cm-merge-b .cm-changedText": {
+    background: "color-mix(in srgb, #3fb950 34%, var(--bg-0))",
+  },
+  "[data-theme='dark'] & .cm-deletedChunk .cm-deletedText": {
+    background: "color-mix(in srgb, #f85149 34%, var(--bg-0))",
+  },
+
+  // Blocks the unified merge view inlines above the text that replaced them.
+  "& .cm-deletedChunk": { backgroundColor: "#fee8e9" },
+  "[data-theme='dark'] & .cm-deletedChunk": {
+    backgroundColor: "color-mix(in srgb, #f85149 16%, var(--bg-0))",
+  },
+
+  // The old/new layouts render one file on its own, so `diffLineMarks` decorates it with these classes
+  // rather than the merge view's. The merge view only ever strips their text decoration and never colors
+  // them, so the palette has to be applied here; it matches the two-sided view's.
+  "& .cm-deletedLine": { backgroundColor: "#fee8e9" },
+  "& .cm-insertedLine": { backgroundColor: "#dfd" },
+  "[data-theme='dark'] & .cm-deletedLine": {
+    backgroundColor: "color-mix(in srgb, #f85149 16%, var(--bg-0))",
+  },
+  "[data-theme='dark'] & .cm-insertedLine": {
+    backgroundColor: "color-mix(in srgb, #3fb950 16%, var(--bg-0))",
+  },
+
+  // The 3px change bar in the gutter. diff2html has no equivalent; it is kept because it is the only cue
+  // that survives once a changed line scrolls out of the colored region.
+  "&.cm-merge-a .cm-changedLineGutter": { backgroundColor: "#e9aeae" },
+  "&.cm-merge-b .cm-changedLineGutter": { backgroundColor: "#b4e2b4" },
+  "& .cm-deletedLineGutter": { backgroundColor: "#e9aeae" },
+  "& .cm-insertedLineGutter": { backgroundColor: "#b4e2b4" },
+  "[data-theme='dark'] &.cm-merge-a .cm-changedLineGutter": { backgroundColor: "#f85149" },
+  "[data-theme='dark'] &.cm-merge-b .cm-changedLineGutter": { backgroundColor: "#3fb950" },
+  "[data-theme='dark'] & .cm-deletedLineGutter": { backgroundColor: "#f85149" },
+  "[data-theme='dark'] & .cm-insertedLineGutter": { backgroundColor: "#3fb950" },
+
+  // Collapsed runs of unchanged lines. diff2html keeps a gray band with a count; the merge view shows a
+  // pair of ⦚ glyphs, which is left alone — only the band is recolored to the app's surfaces.
+  "& .cm-collapsedLines": { color: "var(--text-dim)" },
+  "[data-theme='light'] & .cm-collapsedLines": {
+    background: "linear-gradient(to bottom, transparent 0, #f7f7f7 30%, #f7f7f7 70%, transparent 100%)",
+  },
+  "[data-theme='dark'] & .cm-collapsedLines": {
+    background: "linear-gradient(to bottom, transparent 0, var(--bg-2) 30%, var(--bg-2) 70%, transparent 100%)",
+  },
+});
+
+/** Match a language by filename and load its extension asynchronously; return null for plain text on no match or load failure. */export async function languageExtensionFor(
   path: string,
 ): Promise<Extension | null> {
   const basename = path.split("/").pop() || path;

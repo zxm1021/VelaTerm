@@ -93,20 +93,30 @@ describe("ChangesModal rendering", () => {
     expect(text.indexOf("OLD line")).toBeLessThan(text.indexOf("NEW line"));
   });
 
-  it("shows a single side's file verbatim, with no comparison markup", async () => {
+  it("shows a single side's file on its own, with the lines that changed marked", async () => {
     const { container } = await openModal();
     fireEvent.click(screen.getByText("Old"));
 
     await waitFor(() => expect(container.querySelectorAll(".cm-editor").length).toBe(1));
+    // One editor, not a comparison: no merge view and none of its inlined deleted chunks.
     expect(container.querySelector(".cm-mergeView")).toBeNull();
     expect(container.querySelector(".cm-deletedChunk")).toBeNull();
     const text = container.querySelector(".cm-content")!.textContent!;
     expect(text).toContain("OLD line");
     expect(text).not.toContain("NEW line");
 
+    // The side is still marked as a diff: the old side shows its removed line, and nothing is marked as
+    // inserted because that line lives on the other side.
+    expect(container.querySelectorAll(".cm-deletedLine").length).toBe(1);
+    expect(container.querySelectorAll(".cm-insertedLine").length).toBe(0);
+
     fireEvent.click(screen.getByText("New"));
     await waitFor(() => expect(container.querySelector(".cm-content")!.textContent).toContain("NEW line"));
     expect(container.querySelector(".cm-content")!.textContent).not.toContain("OLD line");
+
+    // The marks follow the side: additions here, no deletions.
+    expect(container.querySelectorAll(".cm-insertedLine").length).toBe(1);
+    expect(container.querySelectorAll(".cm-deletedLine").length).toBe(0);
   });
 
   it("hides unchanged context when the context control is set to 3 lines", async () => {

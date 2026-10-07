@@ -19,6 +19,9 @@ import { useT } from "../../i18n";
 import { useSuspendNativeViews } from "../../hooks/nativeViewSuspend";
 import { DEFAULT_BINDINGS, matchCombo } from "../../hooks/shortcutRegistry";
 import { Seg } from "../../layout/TitleBar/settingsParts";
+import Icons from "../../components/Icons";
+import { getGitStatus } from "../../ipc/info";
+import { projectRoot } from "../../types";
 import {
   gitChangedFiles,
   gitCommitFileDiff,
@@ -97,11 +100,12 @@ function DiffView({
     void (async () => {
       // CodeMirror and the language catalogue load on demand: the modal is opened rarely, and a static
       // import would place roughly 330 kB of editor code in the entry chunk.
-      const [merge, view, state, theme] = await Promise.all([
+      const [merge, view, state, theme, marks] = await Promise.all([
         import("@codemirror/merge"),
         import("@codemirror/view"),
         import("@codemirror/state"),
         import("./codeMirrorTheme"),
+        import("./diffLineMarks"),
       ]);
       const { EditorView, lineNumbers } = view;
       const { EditorState } = state;
@@ -113,6 +117,9 @@ function DiffView({
         EditorState.readOnly.of(true),
         EditorView.lineWrapping,
         theme.vlxCmHighlighting(),
+        // Diff colors come last so they win over the base theme: both target changed lines, and the merge
+        // view injects its own defaults after the caller's extensions.
+        theme.vlxMergeDiffTheme,
       ];
       const side = langExt ? [...base, langExt] : base;
       const collapse = collapseFor(context);
@@ -142,6 +149,14 @@ function DiffView({
             mergeControls: false,
             collapseUnchanged: collapse,
           }),
+        );
+      } else {
+        // One side on its own gets no marks from the merge view, so the same comparison is replayed to
+        // decorate the lines that changed here — removals on the old side, additions on the new.
+        const markedSide = content === "old" ? "old" : "new";
+        const doc = markedSide === "old" ? diff.original : diff.modified;
+        extensions.push(
+          ...marks.diffLineMarksExtension(diff.original, diff.modified, markedSide, state.Text.of(doc.split("\n"))),
         );
       }
       single = new EditorView({
@@ -192,6 +207,38 @@ export function ChangesModal() {
   const [err, setErr] = useState("");
   const [tick, setTick] = useState(0);
   const [prefs, setPrefs] = useState<DiffPrefs>(loadDiffPrefs);
+  const [showList, setShowList] = useState(true);
+  const [branch, setBranch] = useState<string | null>(null);
+
+  // The repository is not necessarily the project root: a folder can hold several repositories, and the
+  // modal may be opened on any of them. Longest matching root wins, so a project nested inside another
+  // does not lose to its parent.
+  const project = useTermStore((s) => {
+    const repo = cwd ?? "";
+    let best: { name: string; root: string } | null = null;
+    for (const candidate of s.projects) {
+      const root = projectRoot(candidate);
+      if (!root || (repo !== root && !repo.startsWith(root + "/"))) continue;
+      if (!best || root.length > best.root.length) best = { name: candidate.name, root };
+    }
+    return best?.name ?? null;
+  });
+
+  // The branch comes from the same call the Git panel's branch row uses, so the two never disagree.
+  useEffect(() => {
+    if (!cwd) return;
+    let alive = true;
+    void getGitStatus(cwd)
+      .then((status) => {
+        if (alive) setBranch(status.isRepo ? (status.branch ?? null) : null);
+      })
+      .catch(() => {
+        if (alive) setBranch(null);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [cwd, tick]);
 
   // Write through on every change rather than in an effect, so the value on disk is never the stale one
   // from before a remount.
@@ -309,23 +356,74 @@ export function ChangesModal() {
           borderBottom: "1px solid var(--border)",
         }}
       >
+        {/* Which project and branch this diff belongs to, ahead of the title. A diff is read out of
+            context otherwise: the same file name exists in every repository, and the branch decides what
+            "the worktree" even means. Both are muted so the title stays the loudest thing here. */}
         <div
           style={{
             flex: "none",
-            maxWidth: "22vw",
+            maxWidth: "38vw",
+            minWidth: 0,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
             fontSize: 13.5,
             fontWeight: 600,
             color: "var(--text-primary)",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
           }}
         >
-          {commit ? t("changes.commitTitle", commit) : t("changes.title")}
+          {project && (
+            <span
+              style={{
+                flex: "none",
+                maxWidth: "16vw",
+                fontWeight: 400,
+                color: "var(--text-muted)",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {project}
+            </span>
+          )}
+          {branch && (
+            <span
+              style={{
+                flex: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+                maxWidth: "18vw",
+                fontWeight: 400,
+                fontFamily: "var(--font-mono)",
+                fontSize: 12,
+                color: "var(--text-muted)",
+              }}
+            >
+              <Icons.branch size={12} />
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {branch}
+              </span>
+            </span>
+          )}
+          <span style={{ flex: "none", whiteSpace: "nowrap" }}>
+            {commit ? t("changes.commitTitle", commit) : t("changes.title")}
+          </span>
         </div>
         <div style={{ flex: 1, minWidth: 8 }} />
         {/* The controls keep their width and the title yields instead: the header has to fit at a narrow
             window width, and a wrapped or clipped control row is worse than a truncated commit hash. */}
+        <button
+          className="vlx-btn"
+          style={{ flex: "none", display: "flex", alignItems: "center", padding: "0 8px" }}
+          onClick={() => setShowList((v) => !v)}
+          title={showList ? t("titlebar.hideLeft") : t("titlebar.showLeft")}
+          aria-label={showList ? t("titlebar.hideLeft") : t("titlebar.showLeft")}
+          aria-pressed={!showList}
+        >
+          <Icons.panelLeft size={15} />
+        </button>
         <Seg<DiffContentMode>
           value={prefs.content}
           options={[
@@ -362,15 +460,17 @@ export function ChangesModal() {
         </button>
       </div>
 
-      {/* Body: file list on the left, diff on the right. */}
+      {/* Body: file list on the left, diff on the right. The list is width-collapsible rather than
+          conditionally rendered so its scroll position survives a hide/show round trip. */}
       <div style={{ flex: 1, display: "flex", minHeight: 0 }}>
         <div
           style={{
-            width: 280,
+            width: showList ? 280 : 0,
             flex: "none",
-            borderRight: "1px solid var(--border)",
-            overflowY: "auto",
-            padding: 6,
+            borderRight: showList ? "1px solid var(--border)" : "none",
+            overflowY: showList ? "auto" : "hidden",
+            overflowX: "hidden",
+            padding: showList ? 6 : 0,
           }}
         >
           {err && (

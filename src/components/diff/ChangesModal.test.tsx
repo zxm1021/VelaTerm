@@ -2,6 +2,9 @@
 //! independent dimensions, and two of them describe a comparison that a single-side view does not perform —
 //! so they must go inert, not silently do nothing. `/` toggles the layout from the keyboard.
 //!
+//! The file-list panel collapses by width rather than unmounting, the header names the project and branch the
+//! diff belongs to, and the close chord belongs to the modal while it is open.
+//!
 //! CodeMirror is stubbed rather than rendered: jsdom has no layout engine, and what these tests care about
 //! is which editor shape the modal asks for, which is exactly the boundary the stubs record.
 
@@ -13,6 +16,7 @@ const mocks = vi.hoisted(() => ({
   editors: [] as { doc: string; unified: boolean }[],
   gitChangedFiles: vi.fn(),
   gitFileDiff: vi.fn(),
+  getGitStatus: vi.fn(),
   mergeViewStub: vi.fn(),
   editorViewStub: vi.fn(),
   unifiedMergeViewStub: vi.fn(),
@@ -23,6 +27,11 @@ vi.mock("../../ipc/commands", () => ({
   gitCommitFiles: vi.fn().mockResolvedValue([]),
   gitFileDiff: mocks.gitFileDiff,
   gitCommitFileDiff: vi.fn(),
+}));
+
+// The branch shown in the header comes from the same call the Git panel's branch row uses.
+vi.mock("../../ipc/info", () => ({
+  getGitStatus: mocks.getGitStatus,
 }));
 
 vi.mock("@codemirror/merge", () => ({
@@ -37,6 +46,9 @@ vi.mock("@codemirror/merge", () => ({
     mocks.unifiedMergeViewStub(config);
     return [];
   },
+  // The one-sided layouts replay the comparison to mark changed lines. The real algorithm is covered by
+  // diffLineMarks.test.ts; here only the fact that it is asked for a side matters.
+  diff: () => [],
 }));
 
 vi.mock("@codemirror/view", () => ({
@@ -53,17 +65,29 @@ vi.mock("@codemirror/view", () => ({
     }
     static editable = { of: () => [] };
     static lineWrapping = [];
+    static decorations = { compute: () => [] };
   },
   lineNumbers: () => [],
+  gutterLineClass: { compute: () => [] },
+  Decoration: { line: () => ({}) },
+  GutterMarker: class {},
 }));
 
 vi.mock("@codemirror/state", () => ({
   EditorState: { readOnly: { of: () => [] } },
+  Text: { of: (lines: string[]) => ({ lines }) },
+  RangeSetBuilder: class {
+    add() {}
+    finish() {
+      return [];
+    }
+  },
 }));
 
 vi.mock("./codeMirrorTheme", () => ({
   vlxCmHighlighting: () => [],
   vlxCmFillHeight: () => [],
+  vlxMergeDiffTheme: [],
   languageExtensionFor: vi.fn().mockResolvedValue(null),
 }));
 
@@ -96,10 +120,22 @@ async function openModal() {
     modified: "new line\n",
     binary: false,
   });
+  mocks.getGitStatus.mockResolvedValue({ isRepo: true, branch: "main", ahead: 0, behind: 0, staged: 0, unstaged: 1, untracked: 0 });
+  // The header names the project owning the open repository, so one has to exist for the name to resolve.
+  useTermStore.setState({
+    projects: [
+      { id: "p1", name: "demo-project", rootPath: "/repo", sortOrder: 0, collapsed: false, createdAt: 0 },
+    ],
+  });
   useTermStore.getState().openChanges("/repo");
   render(<ChangesModal />);
   await waitFor(() => expect(screen.getByText("a.ts")).toBeTruthy());
   await waitFor(() => expect(mocks.mergeViews.length).toBe(1));
+}
+
+/** The file-list panel, found through the row it renders rather than by a test-only attribute. */
+function listPanel(): HTMLElement {
+  return screen.getByText("a.ts").closest("div[style]")!.parentElement as HTMLElement;
 }
 
 describe("ChangesModal", () => {
@@ -107,6 +143,9 @@ describe("ChangesModal", () => {
     localStorage.clear();
     mocks.mergeViews.length = 0;
     mocks.editors.length = 0;
+    mocks.gitChangedFiles.mockReset();
+    mocks.gitFileDiff.mockReset();
+    mocks.getGitStatus.mockReset();
     mocks.mergeViewStub.mockClear();
     mocks.editorViewStub.mockClear();
     mocks.unifiedMergeViewStub.mockClear();
@@ -123,6 +162,30 @@ describe("ChangesModal", () => {
     expect(dialog.style.position).toBe("fixed");
     expect(dialog.style.inset).toBe("0px");
     expect(dialog.style.background).toBe("var(--bg-panel)");
+  });
+
+  it("names the project and branch the diff belongs to", async () => {
+    await openModal();
+    expect(screen.getByText("main")).toBeTruthy();
+    // The store is seeded with a project whose root contains the open repository, so the header can name it.
+    await waitFor(() => expect(screen.getByText("demo-project")).toBeTruthy());
+  });
+
+  it("collapses the file list instead of unmounting it", async () => {
+    await openModal();
+    const panel = listPanel();
+    expect(panel.style.width).toBe("280px");
+
+    fireEvent.click(screen.getByRole("button", { name: "Hide sidebar" }));
+    // Width-collapsed, not unmounted: the rows survive so their scroll position does.
+    expect(panel.style.width).toBe("0px");
+    // Asserted through the longhand: jsdom serializes the `borderRight` shorthand back as "medium" whenever
+    // a width is involved, so the shorthand reads as set even when its style is none.
+    expect(panel.style.borderRightStyle).toBe("none");
+    expect(screen.getByText("a.ts")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Show sidebar" }));
+    expect(panel.style.width).toBe("280px");
   });
 
   it("switches to a merged column on the layout control", async () => {
