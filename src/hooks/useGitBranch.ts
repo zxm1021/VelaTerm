@@ -1,4 +1,4 @@
-//! Lightweight Git branch/worktree information for pane-header and status-bar branch chips.
+//! Lightweight Git branch/worktree information for the status-bar branch chip.
 //! Cache by path and deduplicate same-path requests so multiple panes do not probe one repository repeatedly.
 
 import { useEffect, useState } from "react";

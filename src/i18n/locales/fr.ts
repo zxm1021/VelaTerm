@@ -1259,7 +1259,6 @@ const fr: typeof en = {
   "term.splitRight": "Diviser à droite", // Split right (⌘D)
   "term.splitDown": "Diviser en bas", // Split down (⌘⇧D)
   "term.closePane": "Fermer le volet", // Close split
-  "term.redraw": "Redessiner", // Redraw
   "term.mirrorTooltip":
     "Affichage miroir (taille contrôlée par un autre client). Cliquez pour adapter le PTY à cette fenêtre", // Mirroring (size controlled by another client)…
   "term.mirrorBadge": (dims) =>
@@ -1810,7 +1809,6 @@ const fr: typeof en = {
   "session.switchTitle": "Changer de vue redémarre l'agent",
   "session.switchBody": "Le tour en cours sera interrompu. La conversation est conservée.",
   "session.switchConfirm": "Basculer",
-  "session.terminalViewHint": "Cliquez ici pour revenir à la vue terminal.",
   "session.loading": "Lecture de la conversation…",
   "session.unavailable": "Cette conversation n'est pas encore lisible",
   "session.working": "En cours…",
@@ -2011,8 +2009,6 @@ const fr: typeof en = {
   "chat.backToEnd": "Revenir au message le plus récent",
   "chat.turnFold.hide": "Masquer les étapes",
   "chat.turnFold.show": (n: number) => (n === 1 ? "Afficher 1 étape" : `Afficher ${n} étapes`),
-  "chat.turnFold.hideAll": "Masquer toutes les étapes",
-  "chat.turnFold.showAll": "Afficher toutes les étapes",
   "chat.elicitation.heading": (server: string) => `${server} demande des informations`,
   "chat.elicitation.cancel": "Annuler",
   "chat.elicitation.decline": "Refuser",

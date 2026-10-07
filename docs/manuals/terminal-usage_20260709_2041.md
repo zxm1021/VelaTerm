@@ -10,7 +10,7 @@ Updated: 2026-10-07
 
 A terminal session runs a real shell. On macOS and Linux it is the system default shell (`$SHELL`); on Windows it is cmd by default and can be changed (see §7). The working directory defaults to the project root. The session's edit form lets you change "Working directory (leave empty for project root)" and set a "Startup command (optional)", which runs every time the session starts (for example `pnpm dev`).
 
-When several agents produce a lot of output at once, VelaTerm gives your typing and the visible tab priority and throttles output from background tabs. This behavior is controlled by Settings ▸ Advanced ▸ "Foreground-priority output" (on by default). If a full-screen program ever looks garbled after you switch tabs, click the "Redraw" button in the pane header to repaint it. Settings ▸ Advanced ▸ "Redraw on tab switch" does this automatically whenever a tab becomes visible.
+When several agents produce a lot of output at once, VelaTerm gives your typing and the visible tab priority and throttles output from background tabs. This behavior is controlled by Settings ▸ Advanced ▸ "Foreground-priority output" (on by default). If a full-screen program ever looks garbled after you switch tabs, turn on Settings ▸ Advanced ▸ "Redraw on tab switch" to repaint it automatically whenever a tab becomes visible; the manual "Redraw" button that lived in the pane header is gone.
 
 ## 2. In-terminal search (⌘F)
 

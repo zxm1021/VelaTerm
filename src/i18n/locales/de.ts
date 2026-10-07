@@ -1252,7 +1252,6 @@ const de: typeof en = {
   "term.splitRight": "Rechts teilen", // Split right (⌘D)
   "term.splitDown": "Unten teilen", // Split down (⌘⇧D)
   "term.closePane": "Teilung schließen", // Close split
-  "term.redraw": "Neu zeichnen", // Redraw
   "term.mirrorTooltip":
     "Spiegelanzeige (Größe wird von einem anderen Client gesteuert). Klicken, um das PTY an dieses Fenster anzupassen", // Mirroring (size controlled by another client)…
   "term.mirrorBadge": (dims) => `⤢ Spiegel${dims} · klicken zum Anpassen`, // ⤢ Mirror{dims} · click to fit this window
@@ -1799,7 +1798,6 @@ const de: typeof en = {
   "session.switchTitle": "Der Wechsel der Ansicht startet den Agenten neu",
   "session.switchBody": "Der laufende Zug wird abgebrochen. Das Gespräch bleibt erhalten.",
   "session.switchConfirm": "Wechseln",
-  "session.terminalViewHint": "Klicken Sie hier, um zur Terminalansicht zurückzukehren.",
   "session.loading": "Gespräch wird gelesen…",
   "session.unavailable": "Dieses Gespräch lässt sich noch nicht lesen",
   "session.working": "Arbeitet…",
@@ -2000,8 +1998,6 @@ const de: typeof en = {
   "chat.backToEnd": "Zur neuesten Nachricht",
   "chat.turnFold.hide": "Zwischenschritte ausblenden",
   "chat.turnFold.show": (n: number) => (n === 1 ? "1 Zwischenschritt einblenden" : `${n} Zwischenschritte einblenden`),
-  "chat.turnFold.hideAll": "Alle Zwischenschritte ausblenden",
-  "chat.turnFold.showAll": "Alle Zwischenschritte einblenden",
   "chat.elicitation.heading": (server: string) => `${server} bittet um Eingaben`,
   "chat.elicitation.cancel": "Abbrechen",
   "chat.elicitation.decline": "Ablehnen",

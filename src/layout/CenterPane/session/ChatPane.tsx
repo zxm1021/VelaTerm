@@ -25,7 +25,6 @@ import { setComposerHeight, startComposerResize, useComposerHeight } from "./com
 import type { ComposerChip } from "./composerLayout";
 import { ModelCatalogStatus } from "./ModelCatalogStatus";
 import { useChatModels } from "./useChatModels";
-import { StatusIndicator } from "../../../components/StatusIndicator";
 import { useT, type I18nKey } from "../../../i18n";
 import {
   chatAutoContinueCancel,
@@ -83,16 +82,14 @@ import { attachInputLatencyLog } from "./inputLatency";
 import { buildSuggestions, findFileMention, mentionDir, type Suggestion } from "./completion";
 import { env } from "../../../platform/env";
 import { imageFromNativeClipboard, imagesFromClipboard, imagesFromDrop } from "../../../terminal/imageInput";
-import { IS_MAC, IS_PLAIN_BROWSER, labelWithCombo } from "../../../hooks/shortcutRegistry";
+import { IS_MAC, IS_PLAIN_BROWSER } from "../../../hooks/shortcutRegistry";
 import { useMentionFiles } from "./fileMentions";
 import { ControlChip, LevelBar, type ChipOption } from "./controls";
 import { AutoContinueBar, FastModeChip, McpChip, NotificationBar, RetryLine, TasksChip, UsageMeter } from "./extras";
 import { AgentAccountMenu, AgentAuth } from "./AgentAuth";
 import { CodexResetCredits } from "./CodexResetCredits";
 import { useEngineSwitch } from "./engineSwitch";
-import { ConversationViewHint } from "./ConversationViewHint";
 import { AgentMissingNotice } from "./AgentMissingNotice";
-import { isShareSurface } from "../../../ipc/shareBase";
 import { isAgentNotInstalledError } from "../../../ipc/backendError";
 import { usePermissionRestart } from "./permissionRestart";
 import { PermissionCard, type PermissionAnswer } from "./permissionCards";
@@ -218,31 +215,24 @@ export function ChatPane({
   area,
   hidden,
   focused,
-  multi,
   paneId,
   readOnly = false,
   mobile = false,
   onActivate,
-  onSplit,
-  onClose,
 }: {
   session: Session;
   cwd?: string;
   area: React.CSSProperties;
   hidden: boolean;
   focused: boolean;
-  multi: boolean;
   paneId?: string;
   readOnly?: boolean;
   mobile?: boolean;
   onActivate: (paneId: string, id: string) => void;
-  onSplit: (paneId: string, id: string, dir: "horizontal" | "vertical") => void;
-  onClose: (paneId: string, id: string) => void;
 }) {
   const t = useT();
   const composerOptions = useComposerOptions(mobile);
   const paneStyle = useTermStore((s) => s.paneStyle);
-  const shortcutOverrides = useTermStore((s) => s.shortcutOverrides);
   const composerInlineChips = useTermStore((s) => s.composerInlineChips);
   const inputLatencyLog = useTermStore((s) => s.inputLatencyLog);
   const composerHeight = useComposerHeight();
@@ -251,7 +241,6 @@ export function ChatPane({
   const closeSearch = useTermStore((s) => s.closeSearch);
   const openTaskTab = useTermStore((s) => s.openTaskTab);
   const [searchTarget, setSearchTarget] = useState<string | null>(null);
-  const unread = useTermStore((s) => session.id in s.notifications);
   const defaultMode = useTermStore((s) => storedMode({
     kind: session.kind,
     permissionMode: s.agentDefaults[session.kind]?.permissionMode,
@@ -401,9 +390,7 @@ export function ChatPane({
   const [dismissed, setDismissed] = useState<string | null>(null);
   /** Folded tool runs the reader has opened, by the id of the run's first call. */
   const [openRuns, setOpenRuns] = useState<ReadonlySet<string>>(() => new Set());
-  /** Whether agent turns hide their interim work unless the reader chose otherwise for a turn. */
-  const [foldAll, setFoldAll] = useState(false);
-  /** Per-turn choices that differ from `foldAll`, by turn id; the pane-wide control clears them. */
+  /** Whether the reader has hidden this turn's interim work. */
   const [foldOverrides, setFoldOverrides] = useState<ReadonlyMap<string, boolean>>(() => new Map());
   /** Whether the view is parked away from the end, which is the only time the "back to the end" button is worth showing. */
   const [away, setAway] = useState(false);
@@ -894,8 +881,8 @@ export function ChatPane({
   // Turns the reader collapsed keep only their answer. Search still reads `turnEntries`, so a match inside
   // hidden work is found and its turn opened.
   const folded = useMemo(
-    () => foldAgentTurns(turnEntries, (id) => foldOverrides.get(id) ?? foldAll),
-    [turnEntries, foldOverrides, foldAll],
+    () => foldAgentTurns(turnEntries, (id) => foldOverrides.get(id) ?? false),
+    [turnEntries, foldOverrides],
   );
   const display = folded.rows;
   const messageOrderRef = useRef<string[]>([]);
@@ -912,7 +899,7 @@ export function ChatPane({
     railItemsRef.current = next;
     return next;
   }, [rows, userMessages, messageOrder]);
-  const allTurnsCollapsed = folded.turns.length > 0 && folded.turns.every((turn) => turn.collapsed);
+
   // Everything before this index is virtualized; the tail after it stays really mounted, because those
   // are the rows still growing as text arrives, and a row that changes height while a virtualizer is
   // measuring it is how a view ends up jumping under the reader.
@@ -1123,24 +1110,6 @@ export function ChatPane({
   const toggleTurn = useCallback((fold: TurnFold) => {
     setFoldOverrides(previous => new Map(previous).set(fold.id, !fold.collapsed));
   }, []);
-
-  /** Hide or show the interim work of every turn, keeping the reader's place when parked mid-history. */
-  const toggleAllTurns = () => {
-    const next = !allTurnsCollapsed;
-    const scroll = scrollRef.current;
-    if (scroll && !pinnedRef.current) {
-      const kept = new Set(foldAgentTurns(turnEntries, () => next).rows.map(entry => entry.id));
-      const viewport = scroll.getBoundingClientRect();
-      const anchor = Array.from(scroll.querySelectorAll<HTMLElement>(".sv-item[data-search-id]"))
-        .find(element => kept.has(element.dataset.searchId!) && element.getBoundingClientRect().bottom > viewport.top);
-      prependScroll.current = {
-        height: scroll.scrollHeight, top: scroll.scrollTop,
-        anchor: anchor ? { id: anchor.dataset.searchId!, offset: anchor.getBoundingClientRect().top - viewport.top } : undefined,
-      };
-    }
-    setFoldAll(next);
-    setFoldOverrides(new Map());
-  };
 
   /** Put the view back at the end of the conversation and follow it again. */
   const toEnd = useCallback(() => {
@@ -2148,43 +2117,6 @@ export function ChatPane({
         className={"pane" + (focused ? " focus" : "")}
         style={{ width: "100%", height: "100%", contain: "layout" }}
       >
-        <div className="pane-head">
-          <span style={{ color: "var(--text-secondary)", display: "grid", flex: "none" }}>
-            {kindIconEl(session.kind, 13)}
-          </span>
-          <span className="pt">{session.name}</span>
-          <StatusIndicator status={status} unread={unread} />
-          <span className="pane-tools">
-            <button title={t("term.searchMenu")} onClick={() => useTermStore.getState().openSearch()}>
-              <Icons.search size={14} />
-            </button>
-            <button
-              title={t(allTurnsCollapsed ? "chat.turnFold.showAll" : "chat.turnFold.hideAll")}
-              aria-label={t(allTurnsCollapsed ? "chat.turnFold.showAll" : "chat.turnFold.hideAll")}
-              aria-pressed={allTurnsCollapsed}
-              disabled={folded.turns.length === 0}
-              onClick={toggleAllTurns}
-            >
-              {allTurnsCollapsed ? <Icons.expand size={14} /> : <Icons.collapse size={14} />}
-            </button>
-            {/* The same control the terminal view carries, in the same place, pointing the other way. */}
-            <ConversationViewHint enabled={!mobile && !isShareSurface && focused && !hidden} onSwitch={() => switchTo("tui")} />
-            <button title={labelWithCombo(t("term.splitRight"), "splitRight", shortcutOverrides)} onClick={() => paneId && onSplit(paneId, session.id, "horizontal")}>
-              <Icons.splitV size={14} />
-            </button>
-            <button title={labelWithCombo(t("term.splitDown"), "splitDown", shortcutOverrides)} onClick={() => paneId && onSplit(paneId, session.id, "vertical")}>
-              <Icons.splitH size={14} />
-            </button>
-            <button
-              title={t("term.closePane")}
-              disabled={!multi}
-              onClick={() => multi && paneId && onClose(paneId, session.id)}
-            >
-              <Icons.close size={14} />
-            </button>
-          </span>
-        </div>
-
         <div className="sv" style={{ position: "relative", flex: 1, minHeight: 0 }}>
           {searchOpen && focused && !hidden && <ChatSearch key={session.id} entries={turnEntries} scrollRef={scrollRef} onLocate={locateSearch} onClose={closeSearch}
             loadingHistory={hasMore && !historyError} historyError={historyError} onRetryHistory={() => void loadHistory()} />}

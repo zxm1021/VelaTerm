@@ -120,7 +120,7 @@ export function TerminalPage({
           <p>{tr("err.renderTitle")}</p><p>{error.message}</p>
           <button type="button" onClick={retry}>{tr("common.retry")}</button>
         </div>}>
-          <MobileSessionBody session={session} cwd={cwd} onBack={onBack}
+          <MobileSessionBody session={session} cwd={cwd}
             onImages={injectImages} imgError={imgError} view={view} />
         </ErrorBoundary>
       </div>

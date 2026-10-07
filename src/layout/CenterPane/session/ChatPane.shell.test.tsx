@@ -49,7 +49,7 @@ afterEach(cleanup);
 
 async function mountPane() {
   render(<ChatPane session={{ id: "s", projectId: "p", name: "Claude", kind: "claude", engine: "chat", collapsed: false, sortOrder: 0, createdAt: 0 }}
-    area={{}} hidden={false} focused multi={false} onActivate={() => {}} onSplit={() => {}} onClose={() => {}} />);
+    area={{}} hidden={false} focused onActivate={() => {}} />);
   await waitFor(() => expect(vi.mocked(invoke).mock.calls.some(([command]) => command === "chat_snapshot")).toBe(true));
   await act(async () => {});
   return screen.getByRole("textbox") as HTMLTextAreaElement;
@@ -157,7 +157,7 @@ describe("shell mode in the composer", () => {
       stdoutTruncated: false, stderrTruncated: false, status: "running",
     }] };
     render(<ChatPane session={{ id: "s", projectId: "p", name: "Claude", kind: "claude", engine: "chat", collapsed: false, sortOrder: 0, createdAt: 0 }}
-      area={{}} hidden={false} focused multi={false} readOnly onActivate={() => {}} onSplit={() => {}} onClose={() => {}} />);
+      area={{}} hidden={false} focused readOnly onActivate={() => {}} />);
     expect(await screen.findByText("sleep 30")).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Cancel" })).toBeNull();
     expect(screen.queryByRole("textbox")).toBeNull();

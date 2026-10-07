@@ -1,20 +1,16 @@
-//! A single session pane in the Vlinx UI: pane header (status, title, branch, split, close) plus the real xterm.
+//! A single session pane in the Vlinx UI: the real xterm plus the overlays that belong to it.
 //! Active panes are shown while background panes remain alive under display:none, preserving xterm and PTY.
 //! `area` positions the pane within the terminal region as a percentage rectangle.
 
 import { memo, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 
-import Icons from "../../components/Icons";
 import { ContextMenu, type MenuItem } from "../../components/ContextMenu";
-import { StatusIndicator } from "../../components/StatusIndicator";
 import { AGENT_KIND_LABEL, kindIconEl } from "../sessionViewers/sessionMeta";
 import { useT } from "../../i18n";
 import { TermScrollbar } from "./TermScrollbar";
 import { RunStrip } from "./RunStrip";
 import { usePtySession } from "../../hooks/usePtySession";
-import { useGitBranch } from "../../hooks/useGitBranch";
-import { IS_PLAIN_BROWSER, labelWithCombo } from "../../hooks/shortcutRegistry";
+import { IS_PLAIN_BROWSER } from "../../hooks/shortcutRegistry";
 import { copyText } from "../../ipc/info";
 import {
   agentInstallRecipe,
@@ -34,7 +30,7 @@ import {
   planImagePaste,
   supportsNativeImagePaste,
 } from "../../terminal/imageInput";
-import { shellDisplayName, useTermStore } from "../../store/termStore";
+import { useTermStore } from "../../store/termStore";
 import {
   clearTerminal,
   focusTerminal,
@@ -42,10 +38,9 @@ import {
   hasSelection,
   pasteToTerminal,
   recentOsc52Copy,
-  redrawTerminal,
   selectAll,
 } from "../../terminal/registry";
-import { effectiveStatus, supportsChatEngine, type Session } from "../../types";
+import { type Session } from "../../types";
 import { useEngineSwitch } from "./session/engineSwitch";
 
 // Platform-specific terminal search hint: Cmd+F on macOS shells, Ctrl+Alt+F on Windows/Linux and
@@ -58,34 +53,25 @@ export const TerminalView = memo(function TerminalView({
   area,
   hidden,
   focused,
-  multi,
   paneId,
   onActivate,
-  onSplit,
-  onClose,
 }: {
   session: Session;
   cwd?: string;
   area: React.CSSProperties;
   hidden: boolean;
   focused: boolean;
-  multi: boolean;
   /** ID of this session's current pane; defined only while visible. */
   paneId?: string;
   onActivate: (paneId: string, id: string) => void;
-  onSplit: (paneId: string, id: string, dir: "horizontal" | "vertical") => void;
-  onClose: (paneId: string, id: string) => void;
 }) {
   const t = useT();
-  // Whether this session can be moved to the conversation view at all. Only agents the chat engine can drive
-  // offer the choice; for everything else the terminal is the only view there is.
-  const canSessionView = supportsChatEngine(session.kind);
-  // Moving to the conversation restarts the agent under the other engine, so a working one is asked first.
-  const { switchTo, confirm: engineConfirm } = useEngineSwitch(session);
+  // Only the confirmation dialog is left of the engine switch: the pane header carried the button that
+  // started a move to the conversation view, and the header is gone.
+  const { confirm: engineConfirm } = useEngineSwitch(session);
   const { containerRef, starting, sizeMode, ptyDims, takeoverSize } =
     usePtySession(session, cwd, hidden);
   const paneStyle = useTermStore((s) => s.paneStyle);
-  const shortcutOverrides = useTermStore((s) => s.shortcutOverrides);
   const openSearch = useTermStore((s) => s.openSearch);
   // Agent-default image paste applies only to local desktop (Tauri/Electron). Browser and remote agents do not
   // share the clipboard machine, so they always upload. See Terminal > Image Paste and the design document.
@@ -93,13 +79,6 @@ export const TerminalView = memo(function TerminalView({
   // Subscribe only to whether this is the current session. With memoization, switching rerenders only the
   // terminal being left and the terminal being entered; other mounted background terminals remain untouched.
   const isActive = useTermStore((s) => s.activeSessionId === session.id);
-  // Subscribe to the derived status string rather than the runtime object. Every set changes object identity
-  // and would rerender TerminalView even without a value change; Object.is naturally deduplicates strings.
-  const status = useTermStore((s) => effectiveStatus(s.runtimes[session.id]));
-  // Unread notifications follow Tab and project-tree semantics and clear after two seconds of viewing.
-  const unread = useTermStore((s) => session.id in s.notifications);
-  const isAgent = session.kind !== "terminal";
-  const branch = useGitBranch(cwd ?? null);
   // Poll for the installation path during one-click install. Keep this on TerminalView because the card unmounts when hidden.
   useAgentInstallLocator(session);
 
@@ -267,89 +246,6 @@ export const TerminalView = memo(function TerminalView({
         // absolutely positioned overlays are already bounded by .pane's overflow:hidden.
         style={{ width: "100%", height: "100%", contain: "layout" }}
       >
-        {/* The pane header is always shown. Even a single, unsplit pane keeps it so the split button
-            stays clickable and the user can split at any time; the close button is disabled while there
-            is only one pane. The split shortcuts (⌘D/⌘⇧D, or Ctrl+Alt+D/E elsewhere) split as well. */}
-        <div className="pane-head">
-          {/* The kind icon and status dot reuse the same shared components as the tabs and the sidebar tree, keeping all three consistent. */}
-          <span
-            style={{
-              color: isAgent ? "var(--text-secondary)" : "var(--text-dim)",
-              display: "grid",
-              flex: "none",
-            }}
-          >
-            {kindIconEl(session.kind, 13)}
-          </span>
-          <span className="pt">{session.name}</span>
-          <StatusIndicator status={status} unread={unread} />
-          {branch && (
-            <span className="branch">
-              <Icons.branch size={11} />
-              {branch}
-            </span>
-          )}
-          {/* Terminal sessions put the shell picker in the header, left of the tool buttons, rather than over the bottom-right of xterm; see ShellPicker. */}
-          <ShellPicker session={session} />
-          <span className="pane-tools">
-            {canSessionView && (
-              <button
-                title={t("session.showConversation")}
-                aria-label={t("session.showConversation")}
-                onMouseDown={stop}
-                onClick={(e) => {
-                  stop(e);
-                  switchTo("chat");
-                }}
-              >
-                <Icons.bot size={14} />
-              </button>
-            )}
-            <button
-              title={t("term.redraw")}
-              onMouseDown={stop}
-              onClick={(e) => {
-                stop(e);
-                redrawTerminal(session.id);
-                focusTerminal(session.id);
-              }}
-            >
-              <Icons.restart size={14} />
-            </button>
-            <button
-              title={labelWithCombo(t("term.splitRight"), "splitRight", shortcutOverrides)}
-              onMouseDown={stop}
-              onClick={(e) => {
-                stop(e);
-                if (paneId) onSplit(paneId, session.id, "horizontal");
-              }}
-            >
-              <Icons.splitV size={14} />
-            </button>
-            <button
-              title={labelWithCombo(t("term.splitDown"), "splitDown", shortcutOverrides)}
-              onMouseDown={stop}
-              onClick={(e) => {
-                stop(e);
-                if (paneId) onSplit(paneId, session.id, "vertical");
-              }}
-            >
-              <Icons.splitH size={14} />
-            </button>
-            <button
-              title={t("term.closePane")}
-              disabled={!multi}
-              onMouseDown={stop}
-              onClick={(e) => {
-                stop(e);
-                if (multi && paneId) onClose(paneId, session.id);
-              }}
-            >
-              <Icons.close size={14} />
-            </button>
-          </span>
-        </div>
-
         {/* Commands this session started with vrun, shown while they run; the terminal below shrinks to fit. */}
         {!hidden && <RunStrip sessionId={session.id} />}
 
@@ -541,59 +437,6 @@ export const TerminalView = memo(function TerminalView({
     </div>
   );
 });
-
-/** Inline terminal shell selector: a header pill beside the split/close controls that displays the current shell
- *  and opens a switcher. It appears only for plain terminal sessions with a detected shell, not agent sessions.
- *  Switching uses store.switchSessionShell, shared with the context menu, and restarts a running session.
- *
- *  Keep it in the header rather than over xterm's lower-right corner. An overlay cannot be immediately clickable
- *  while also allowing text selection through the same mousedown; a pointer-through hover delay felt sluggish.
- *  The header placement provides immediate clicks and unobstructed selection everywhere in the terminal. */
-function ShellPicker({ session }: { session: Session }) {
-  const t = useT();
-  const shells = useTermStore((s) => s.shells);
-  const switchSessionShell = useTermStore((s) => s.switchSessionShell);
-  const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
-
-  if (session.kind !== "terminal" || shells.length === 0) return null;
-
-  const current = shellDisplayName(shells, session.shell ?? null);
-  const items: MenuItem[] = shells.map((sh) => ({
-    label: (session.shell === sh.path ? "✓ " : "　") + sh.label,
-    onClick: () => void switchSessionShell(session.id, sh.path),
-  }));
-
-  return (
-    <>
-      <button
-        className="shell-pick"
-        title={t("tree.shellMenu")}
-        onMouseDown={(e) => e.stopPropagation()}
-        onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); }}
-        onClick={(e) => {
-          e.stopPropagation();
-          const r = e.currentTarget.getBoundingClientRect();
-          // Header control: open below the pill; ContextMenu still clamps to viewport edges.
-          setMenu({ x: r.left, y: r.bottom + 2 });
-        }}
-      >
-        <Icons.terminal size={11} />
-        <span className="shell-pick-name">{current}</span>
-        <Icons.chevD size={9} />
-      </button>
-      {/* This must be portalled to body. The pill lives in the pane header, and `.pane` carries
-          `contain: layout`, which makes it the containing block for position:fixed descendants and clips
-          them with its own overflow:hidden. Rendered in place, the menu would be offset and cropped down
-          to one or two clickable rows (in testing, only "cmd" could be selected). Portalled out of
-          `.pane` it positions against viewport coordinates and is not clipped. */}
-      {menu &&
-        createPortal(
-          <ContextMenu x={menu.x} y={menu.y} items={items} onClose={() => setMenu(null)} />,
-          document.body,
-        )}
-    </>
-  );
-}
 
 /** Locates an installation, fills the agent's global executable-path setting, and immediately flushes it to the
  *  backend. Returns whether a usable path already existed or was saved.

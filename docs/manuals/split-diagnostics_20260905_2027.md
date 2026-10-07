@@ -30,7 +30,7 @@ A split line contains the client identifier, `clientAtMs`, the source, the sessi
 | --- | --- |
 | `shortcut` | Keyboard shortcut in the interface |
 | `menu` | Application menu, including its keyboard shortcuts |
-| `pane-button` | Split button in the pane header |
+| `pane-button` | Split button in the pane header (no longer produced: the header was removed) |
 | `sidebar` | Split item in a session's context menu |
 | `drop` | A session dragged onto a pane |
 | `tile` | Several sessions tiled at once |

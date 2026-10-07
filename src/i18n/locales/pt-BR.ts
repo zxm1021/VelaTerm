@@ -1256,7 +1256,6 @@ const ptBR: typeof en = {
   "term.splitRight": "Dividir à direita", // Split right (⌘D)
   "term.splitDown": "Dividir abaixo", // Split down (⌘⇧D)
   "term.closePane": "Fechar divisão", // Close split
-  "term.redraw": "Redesenhar", // Redraw
   "term.mirrorTooltip":
     "Exibindo em espelho (tamanho controlado por outro cliente). Clique para ajustar o PTY a esta janela", // Mirroring (size controlled by another client)…
   "term.mirrorBadge": (dims) =>
@@ -1804,7 +1803,6 @@ const ptBR: typeof en = {
   "session.switchTitle": "Trocar de visão reinicia o agente",
   "session.switchBody": "O turno em andamento será interrompido. A conversa é preservada.",
   "session.switchConfirm": "Trocar",
-  "session.terminalViewHint": "Clique aqui para voltar à visão de terminal.",
   "session.loading": "Lendo a conversa…",
   "session.unavailable": "Esta conversa ainda não pode ser lida",
   "session.working": "Trabalhando…",
@@ -2005,8 +2003,6 @@ const ptBR: typeof en = {
   "chat.backToEnd": "Voltar para a mensagem mais recente",
   "chat.turnFold.hide": "Ocultar passos",
   "chat.turnFold.show": (n: number) => (n === 1 ? "Mostrar 1 passo" : `Mostrar ${n} passos`),
-  "chat.turnFold.hideAll": "Ocultar todos os passos",
-  "chat.turnFold.showAll": "Mostrar todos os passos",
   "chat.elicitation.heading": (server: string) => `${server} solicita informações`,
   "chat.elicitation.cancel": "Cancelar",
   "chat.elicitation.decline": "Recusar",

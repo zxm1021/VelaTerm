@@ -320,7 +320,6 @@
 
 /* 会话内容放入原手机页面，不挂载桌面外框。 */
 .m-session-content{position:relative;isolation:isolate;display:flex;flex-direction:column;flex:1;min-height:0;min-width:0;overflow:hidden}
-.m-session-content .pane-head{display:none}
 .m-session-content .sv{--sv-col:100%}
 .m-session-content .sv-scroll,.m-session-content .sv-composer{padding:12px}
 .m-session-content .sv-controls{flex-wrap:wrap;gap:8px}

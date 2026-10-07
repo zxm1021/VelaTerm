@@ -1264,7 +1264,6 @@ const ru: typeof en = {
   "term.splitRight": "Разделить вправо", // Split right (⌘D)
   "term.splitDown": "Разделить вниз", // Split down (⌘⇧D)
   "term.closePane": "Закрыть панель", // Close split
-  "term.redraw": "Перерисовать", // Redraw
   "term.mirrorTooltip":
     "Зеркальный режим (размером управляет другой клиент). Нажмите, чтобы подогнать PTY под это окно", // Mirroring (size controlled by another client)…
   "term.mirrorBadge": (dims) =>
@@ -1812,7 +1811,6 @@ const ru: typeof en = {
   "session.switchTitle": "Смена вида перезапускает агента",
   "session.switchBody": "Текущий ход будет прерван. Разговор сохранится.",
   "session.switchConfirm": "Переключить",
-  "session.terminalViewHint": "Нажмите здесь, чтобы вернуться к виду терминала.",
   "session.loading": "Читаем беседу…",
   "session.unavailable": "Эту беседу пока не удаётся прочитать",
   "session.working": "Работает…",
@@ -2017,8 +2015,6 @@ const ru: typeof en = {
   "chat.backToEnd": "К последнему сообщению",
   "chat.turnFold.hide": "Скрыть шаги",
   "chat.turnFold.show": (n: number) => `Показать шаги (${n})`,
-  "chat.turnFold.hideAll": "Скрыть все шаги",
-  "chat.turnFold.showAll": "Показать все шаги",
   "chat.elicitation.heading": (server: string) => `${server} запрашивает данные`,
   "chat.elicitation.cancel": "Отмена",
   "chat.elicitation.decline": "Отклонить",

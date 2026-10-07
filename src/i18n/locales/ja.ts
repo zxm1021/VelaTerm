@@ -1248,7 +1248,6 @@ const ja: typeof en = {
   "term.splitRight": "右に分割", // Split right (⌘D)
   "term.splitDown": "下に分割", // Split down (⌘⇧D)
   "term.closePane": "分割を閉じる", // Close split
-  "term.redraw": "再描画", // Redraw
   "term.mirrorTooltip":
     "ミラー表示中（サイズは他のクライアントが制御）。クリックすると PTY をこのウィンドウのサイズに合わせます", // Mirroring (size controlled by another client)…
   "term.mirrorBadge": (dims) =>
@@ -1797,7 +1796,6 @@ const ja: typeof en = {
   "session.switchTitle": "ビューを切り替えるとエージェントが再起動します",
   "session.switchBody": "進行中のターンは中断されます。会話の内容は残ります。",
   "session.switchConfirm": "切り替える",
-  "session.terminalViewHint": "ここをクリックすると、ターミナルビューに戻れます。",
   "session.loading": "会話を読み込んでいます…",
   "session.unavailable": "この会話はまだ読み取れません",
   "session.working": "実行中…",
@@ -1995,8 +1993,6 @@ const ja: typeof en = {
   "chat.backToEnd": "最新のメッセージに戻る",
   "chat.turnFold.hide": "途中経過を隠す",
   "chat.turnFold.show": (n: number) => `途中経過を表示（${n} ステップ）`,
-  "chat.turnFold.hideAll": "すべての途中経過を隠す",
-  "chat.turnFold.showAll": "すべての途中経過を表示",
   "chat.elicitation.heading": (server: string) => `${server} が入力を求めています`,
   "chat.elicitation.cancel": "キャンセル",
   "chat.elicitation.decline": "拒否",

@@ -160,7 +160,7 @@ it("replays newer events over a late snapshot without losing history or restorin
 
 async function mountPane(kind: "claude" | "codex" | "opencode" | "antigravity" = "claude", expectedModel: string | null = "old-model", mobile = false) {
   const view = render(<ChatPane session={{ id: "s", projectId: "p", name: "Claude", kind, engine: "chat", collapsed: false, sortOrder: 0, createdAt: 0 }}
-    area={{}} hidden={false} focused multi={false} mobile={mobile} onActivate={() => {}} onSplit={() => {}} onClose={() => {}} />);
+    area={{}} hidden={false} focused mobile={mobile} onActivate={() => {}} />);
   if (expectedModel !== null) await waitFor(() => expect((screen.getByRole("combobox", { name: "Model" }) as HTMLSelectElement).value).toBe(expectedModel));
   else await waitFor(() => expect(vi.mocked(invoke).mock.calls.some(([command]) => command === "chat_snapshot")).toBe(true));
   return view;
@@ -865,7 +865,8 @@ it("searches the focused session and closes without interrupting a running turn"
   snapshotOverrides = { rows: [{ kind: "user", id: "search-message", text: "Searchable history" }] };
   useTermStore.setState({ searchOpen: false });
   const { container } = await mountPane();
-  fireEvent.click(screen.getByTitle("Search…"));
+  // The pane header's search button is gone, so open the search the way the shortcut does.
+  act(() => useTermStore.getState().openSearch());
   const input = screen.getByRole("textbox", { name: "Search transcript…" });
   fireEvent.change(input, { target: { value: "history" } });
   expect(screen.getByRole("status", { name: "1 of 1" }).textContent).toBe("1/1");
@@ -1496,7 +1497,7 @@ it("restores Codex authorization from the backend and retains the conversation a
 it("keeps authentication commands out of read-only conversation views", async () => {
   snapshotOverrides = { auth: { status: "required" } };
   render(<ChatPane session={{ id: "s", projectId: "p", name: "Codex", kind: "codex", engine: "chat", collapsed: false, sortOrder: 0, createdAt: 0 }}
-    area={{}} hidden={false} focused multi={false} readOnly onActivate={() => {}} onSplit={() => {}} onClose={() => {}} />);
+    area={{}} hidden={false} focused readOnly onActivate={() => {}} />);
   await act(async () => {});
   expect(screen.queryByRole("button", { name: "Sign in again" })).toBeNull();
   expect(screen.queryByRole("button", { name: "Codex account" })).toBeNull();

@@ -159,7 +159,6 @@ export function CenterPane() {
   const searchOpen = useTermStore((s) => s.searchOpen);
   const focusPane = useTermStore((s) => s.focusPane);
   const closePane = useTermStore((s) => s.closePane);
-  const splitNew = useTermStore((s) => s.splitNew);
   const newScratchTab = useTermStore((s) => s.newScratchTab);
   const shortcutOverrides = useTermStore((s) => s.shortcutOverrides);
   const openSession = useTermStore((s) => s.openSession);
@@ -181,13 +180,6 @@ export function CenterPane() {
     (paneId: string, id: string) => focusPane(paneId, id),
     [focusPane],
   );
-  const handleSplit = useCallback(
-    (paneId: string, id: string, dir: "horizontal" | "vertical") => {
-      focusPane(paneId, id);
-      void splitNew(dir, "pane-button");
-    },
-    [focusPane, splitNew],
-  );
   const handleClose = useCallback(
     (paneId: string, id: string) => {
       focusPane(paneId, id);
@@ -203,7 +195,6 @@ export function CenterPane() {
   const visibleBySession = new Map(
     layout.map(({ leaf, rect }) => [leaf.sessionId, { rect, paneId: leaf.paneId }]),
   );
-  const multi = layout.length > 1;
 
   // Sidebar session drags. Terminals and chat panes let dragover and drop bubble up to the stage, which resolves
   // the pane under the pointer against the active layout and previews where the session would land.
@@ -381,11 +372,8 @@ export function CenterPane() {
                 area={info ? rectToStyle(info.rect) : FULL}
                 hidden={!visible}
                 focused={visible && id === activeSessionId}
-                multi={multi}
                 paneId={info?.paneId}
                 onActivate={handleActivate}
-                onSplit={handleSplit}
-                onClose={handleClose}
               />
             );
           }
@@ -397,11 +385,8 @@ export function CenterPane() {
               area={info ? rectToStyle(info.rect) : FULL}
               hidden={!visible}
               focused={visible && id === activeSessionId}
-              multi={multi}
               paneId={info?.paneId}
               onActivate={handleActivate}
-              onSplit={handleSplit}
-              onClose={handleClose}
             />
           );
         })}

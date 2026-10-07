@@ -1239,7 +1239,6 @@ const ko: typeof en = {
   "term.splitRight": "오른쪽 분할", // Split right (⌘D)
   "term.splitDown": "아래 분할", // Split down (⌘⇧D)
   "term.closePane": "분할 닫기", // Close split
-  "term.redraw": "다시 그리기", // Redraw
   "term.mirrorTooltip":
     "미러 표시 중 (크기는 다른 클라이언트가 제어). 클릭하면 PTY를 이 창 크기에 맞춥니다", // Mirroring (size controlled by another client)…
   "term.mirrorBadge": (dims) => `⤢ 미러${dims} · 클릭해 이 창에 맞춤`, // ⤢ Mirror{dims} · click to fit this window
@@ -1780,7 +1779,6 @@ const ko: typeof en = {
   "session.switchTitle": "보기를 전환하면 에이전트가 다시 시작됩니다",
   "session.switchBody": "진행 중인 턴이 중단됩니다. 대화 내용은 그대로 유지됩니다.",
   "session.switchConfirm": "전환",
-  "session.terminalViewHint": "여기를 클릭하면 터미널 보기로 돌아갈 수 있습니다.",
   "session.loading": "대화를 읽는 중…",
   "session.unavailable": "이 대화는 아직 읽을 수 없습니다",
   "session.working": "작업 중…",
@@ -1978,8 +1976,6 @@ const ko: typeof en = {
   "chat.backToEnd": "최신 메시지로 이동",
   "chat.turnFold.hide": "진행 과정 숨기기",
   "chat.turnFold.show": (n: number) => `진행 과정 보기(${n}단계)`,
-  "chat.turnFold.hideAll": "모든 진행 과정 숨기기",
-  "chat.turnFold.showAll": "모든 진행 과정 보기",
   "chat.elicitation.heading": (server: string) => `${server}에서 입력을 요청합니다`,
   "chat.elicitation.cancel": "취소",
   "chat.elicitation.decline": "거절",

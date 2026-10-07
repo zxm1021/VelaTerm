@@ -18,10 +18,7 @@ Both views continue the same conversation. A session can move from one view to t
 
 **Per session.** The "New with launch args…" dialog has an "Opens in" option, so a single session can start in the other view.
 
-**Switching an existing session.** The pane header has a switch button:
-
-- In the terminal view, the robot button ("Conversation view") moves the session to the conversation view.
-- In the conversation view, the terminal button ("Terminal view") moves it back. A short hint points at this button until you close the hint or use the button.
+**Switching an existing session.** There is no in-window control for this. The pane header that carried the switch button was removed; to move a session between the two views, set the agent's "Default view" under Settings ▸ Agents and start a new session, or use "Opens in" in the "New with launch args…" dialog.
 
 If the agent is working, VelaTerm asks first: "Switching views restarts the agent. The turn in progress will stop. Your conversation is kept." Choose "Switch" to continue. An idle session switches immediately.
 
@@ -142,8 +139,8 @@ With the setting on, the conversation shows when it will continue, for example "
 
 - The latest part of the conversation loads first. Scroll up, or choose "Load earlier messages", to read further back.
 - Consecutive tool calls fold into one line ("N tool calls"); click it to see each call.
-- Each answer can hide its intermediate steps ("Hide steps" / "Show N steps"). The pane header has "Hide all steps" / "Show all steps".
-- The "Search…" button in the pane header, or the Find in terminal shortcut (⌘F / Ctrl+Alt+F), searches the conversation.
+- Each answer can hide its intermediate steps ("Hide steps" / "Show N steps"). There is no longer a "Hide all steps" / "Show all steps" control: it lived in the pane header, which was removed.
+- The Find in terminal shortcut (⌘F / Ctrl+Alt+F) searches the conversation. The pane header's "Search…" button is gone.
 - After scrolling up, "Back to the latest message" returns to the end.
 - Your own messages have a copy button. Text in any message can be selected and copied.
 

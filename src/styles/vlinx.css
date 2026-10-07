@@ -371,7 +371,6 @@ svg { display: block; }
 
 .pane { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: var(--bg-term); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; transition: border-color .12s; }
 .pane.focus { border-color: var(--accent-line); }
-.pane.focus .pane-head { background: var(--accent-soft); }
 
 /* Fade sessions in when returning from display:none to soften the browser's first full-screen repaint.
    The CSS animation restarts only on visibility changes; it improves appearance, not repaint latency. */
@@ -385,20 +384,6 @@ svg { display: block; }
 [data-pane="flush"] .divider.dv-col { height: 1px; }
 [data-pane="flush"] .divider::before { background: var(--border-strong); }
 [data-pane="flush"] .pane.focus { box-shadow: inset 2px 0 0 var(--accent); }
-[data-pane="flush"] .pane.focus .pane-head { background: var(--accent-soft); }
-.pane-head { height: 28px; flex: none; display: flex; align-items: center; gap: 7px; padding: 0 6px 0 10px; background: var(--bg-2); border-bottom: 1px solid var(--border); cursor: pointer; }
-.pane-head .pt { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-mid); font-size: 11.5px; }
-.pane.focus .pane-head .pt { color: var(--text); }
-.pane-head .branch { color: var(--text-faint); font-size: 10.5px; display: flex; align-items: center; gap: 3px; flex: none; }
-.pane-tools { display: flex; gap: 1px; flex: none; }
-.pane-tools button { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; color: var(--text-faint); }
-.pane-tools button:hover { background: var(--bg-active); color: var(--text); }
-.pane-tools button:disabled { opacity: 0.3; cursor: default; }
-
-/* Shell-switch pill sits left of pane tools and includes text, so it does not reuse fixed-width tool buttons. */
-.pane-head .shell-pick { display: flex; align-items: center; gap: 4px; flex: none; height: 20px; padding: 0 6px; border-radius: 5px; color: var(--text-faint); font-size: 10.5px; cursor: pointer; }
-.pane-head .shell-pick:hover { background: var(--bg-active); color: var(--text); }
-.pane-head .shell-pick-name { max-width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* terminal body */
 .term { flex: 1; overflow-y: auto; padding: 10px 12px; font-size: var(--term-fs); line-height: 1.62; }

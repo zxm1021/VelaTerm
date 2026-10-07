@@ -1251,7 +1251,6 @@ const en = {
   "term.splitRight": "Split right",
   "term.splitDown": "Split down",
   "term.closePane": "Close split",
-  "term.redraw": "Redraw",
   "term.mirrorTooltip":
     "Mirroring (size controlled by another client). Click to resize the PTY to this window",
   "term.mirrorBadge": (dims: string) =>
@@ -1801,7 +1800,6 @@ const en = {
   "session.switchTitle": "Switching views restarts the agent",
   "session.switchBody": "The turn in progress will stop. Your conversation is kept.",
   "session.switchConfirm": "Switch",
-  "session.terminalViewHint": "Click here to switch back to terminal view.",
   "session.loading": "Reading the conversation…",
   "session.unavailable": "This conversation can't be read yet",
   "session.working": "Working…",
@@ -2001,8 +1999,6 @@ const en = {
   "chat.backToEnd": "Back to the latest message",
   "chat.turnFold.hide": "Hide steps",
   "chat.turnFold.show": (n: number) => (n === 1 ? "Show 1 step" : `Show ${n} steps`),
-  "chat.turnFold.hideAll": "Hide all steps",
-  "chat.turnFold.showAll": "Show all steps",
   // ── An MCP server asking the person something, through the agent ──
   "chat.elicitation.heading": (server: string) => `${server} is asking for input`,
   "chat.elicitation.cancel": "Cancel",

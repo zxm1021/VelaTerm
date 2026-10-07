@@ -1225,7 +1225,6 @@ const vi: typeof en = {
   "term.splitRight": "Chia sang phải",
   "term.splitDown": "Chia xuống dưới",
   "term.closePane": "Đóng khung chia",
-  "term.redraw": "Vẽ lại",
   "term.mirrorTooltip":
     "Đang phản chiếu (kích thước do máy khách khác điều khiển). Nhấp để đổi kích thước PTY theo cửa sổ này",
   "term.mirrorBadge": (dims: string) =>
@@ -1756,7 +1755,6 @@ const vi: typeof en = {
   "session.switchTitle": "Chuyển chế độ xem sẽ khởi động lại tác nhân",
   "session.switchBody": "Lượt đang thực hiện sẽ bị dừng. Nội dung hội thoại được giữ nguyên.",
   "session.switchConfirm": "Chuyển",
-  "session.terminalViewHint": "Nhấn vào đây để quay lại chế độ terminal.",
   "session.loading": "Đang đọc hội thoại…",
   "session.unavailable": "Chưa thể đọc hội thoại này",
   "session.working": "Đang xử lý…",
@@ -1955,8 +1953,6 @@ const vi: typeof en = {
   "chat.backToEnd": "Về tin nhắn mới nhất",
   "chat.turnFold.hide": "Ẩn các bước",
   "chat.turnFold.show": (n: number) => `Hiện ${n} bước`,
-  "chat.turnFold.hideAll": "Ẩn tất cả các bước",
-  "chat.turnFold.showAll": "Hiện tất cả các bước",
   "chat.elicitation.heading": (server: string) => `${server} yêu cầu nhập dữ liệu`,
   "chat.elicitation.cancel": "Hủy",
   "chat.elicitation.decline": "Từ chối",

@@ -1219,7 +1219,6 @@ const zhTW: typeof en = {
   "term.splitRight": "右分割", // Split right (⌘D)
   "term.splitDown": "下分割", // Split down (⌘⇧D)
   "term.closePane": "關閉分割", // Close split
-  "term.redraw": "重繪", // Redraw
   "term.mirrorTooltip":
     "目前為鏡像顯示（尺寸由其它端主控）。點擊把 PTY 尺寸調整為本視窗大小", // Mirroring (size controlled by another client)…
   "term.mirrorBadge": (dims) => `⤢ 鏡像${dims} · 點擊適配本視窗`, // ⤢ Mirror{dims} · click to fit this window
@@ -1748,7 +1747,6 @@ const zhTW: typeof en = {
   "session.switchTitle": "切換檢視將重新啟動智慧體",
   "session.switchBody": "目前進行中的回合會中斷，對話內容不會遺失。",
   "session.switchConfirm": "切換",
-  "session.terminalViewHint": "點選這裡即可切換回終端機檢視。",
   "session.loading": "正在讀取對話…",
   "session.unavailable": "暫時無法讀取此會話的對話內容",
   "session.working": "處理中…",
@@ -1946,8 +1944,6 @@ const zhTW: typeof en = {
   "chat.backToEnd": "回到最新訊息",
   "chat.turnFold.hide": "隱藏過程",
   "chat.turnFold.show": (n: number) => `顯示過程（${n} 步）`,
-  "chat.turnFold.hideAll": "隱藏全部過程",
-  "chat.turnFold.showAll": "顯示全部過程",
   "chat.elicitation.heading": (server: string) => `${server} 要求輸入`,
   "chat.elicitation.cancel": "取消",
   "chat.elicitation.decline": "拒絕",

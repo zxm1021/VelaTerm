@@ -50,7 +50,7 @@ Scratch terminals exist only as tabs: they never become tree nodes and are disca
 
 Right-click a project or group and choose "New Claude Session". The first level of the menu offers Claude, Codex and OpenCode; "More Agent Session" lists all fourteen supported agents. You can also press ⌘N (Ctrl+Alt+N on Windows, Linux and in regular browsers) to open a searchable list of agents.
 
-VelaTerm starts the agent in the project directory. Claude, Codex, OpenCode, Pi and OMP sessions open in the **conversation view**: type your message in the box at the bottom and press Enter. The other agents open in the **terminal view**, which shows the agent's own terminal interface. The switch button in the pane header moves a session between the two views; see [Conversation View](conversation-view_20260925_1012.md).
+VelaTerm starts the agent in the project directory. Claude, Codex, OpenCode, Pi and OMP sessions open in the **conversation view**: type your message in the box at the bottom and press Enter. The other agents open in the **terminal view**, which shows the agent's own terminal interface. Settings ▸ Agents ▸ "Default view" picks which view a new session opens in; see [Conversation View](conversation-view_20260925_1012.md).
 
 ![A running Claude session with the Info panel](../assets/manuals/agent-info.png)
 

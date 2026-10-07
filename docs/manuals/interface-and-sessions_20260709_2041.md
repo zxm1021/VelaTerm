@@ -84,7 +84,7 @@ Document and browser tabs are covered in [Document & Browser Tabs](document-and-
 
 A tab can hold several panes:
 
-- ⌘D splits right and ⌘⇧D splits down (Ctrl+Alt+D and Ctrl+Alt+E on Windows and Linux); the pane header has the same buttons. The new pane is a scratch terminal that starts in the current pane's working directory.
+- ⌘D splits right and ⌘⇧D splits down (Ctrl+Alt+D and Ctrl+Alt+E on Windows and Linux). The pane header that carried the same buttons, along with close and the shell picker, was removed; use the shortcuts, the menu bar, or a session's context menu. The new pane is a scratch terminal that starts in the current pane's working directory.
 - To show an existing session in the current tab, use "Open in Split Right", "Open in Split Down" or "Open in Focused Pane" from its menu, or drag it from the sidebar onto the center pane.
 - "Tile Selected Sessions" arranges two to four selected sessions in one tab.
 - Sessions shown in another pane of the current tab are highlighted in the sidebar.
