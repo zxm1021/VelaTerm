@@ -11,6 +11,8 @@ v0.1.91 is the first public release; earlier version numbers were internal itera
 
 ### Terminal
 
+- **The terminal opens in Maple Mono at size 18.** Both are defaults, not fixed choices: the Settings font and size fields still override them, and ⌘0 returns the size to 18. The conversation view and the rest of the UI keep JetBrains Mono. Maple Mono ships with the app, so no installation is needed, and it covers box drawing and block characters at its own advance, which keeps TUI frames and progress bars aligned.
+
 - **⌘K clears the active terminal.** The active terminal's buffer and scrollback are cleared and focus returns to it, matching the context menu's “Clear” action. The key is fixed and cannot be rebound. On Windows, Linux and in browser clients Ctrl+K is left untouched, because it is the shell's kill-line key.
 
 - **Option is sent to terminal programs as Meta.** On macOS, holding Option now sends an ESC prefix instead of the layout's special character, so Option-based agent shortcuts work: Option+P opens Claude Code's model picker. This matches Ghostty's `macos-option-as-alt`. The cost is that Option+letter no longer types the layout's alternate character (Option+P no longer types “π”).

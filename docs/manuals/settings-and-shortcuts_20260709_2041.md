@@ -39,8 +39,8 @@ The light and dark themes are switched in the title bar (follow system, dark, li
 | Image paste | "Paste file path" (default) saves a pasted image as a temporary file and inserts its path. "Native image paste" lets Claude Code or Codex read the image from the clipboard; it is available only in the local desktop app |
 | Command suggestions | "Automatic", "On Tab" or "Off". Takes effect immediately, including in open terminals; hidden where it is not supported. See [Command suggestions](terminal-completion_20260908.md) |
 | Default shell | Shell for new terminals. Shown on Windows, where several shells are available; macOS and Linux always use the system shell |
-| Terminal font | Font of the terminal |
-| Terminal size | Terminal font size (default 13). ⌘+ / ⌘- / ⌘0 change it while you work |
+| Terminal font | Font of the terminal (default Maple Mono, which ships with the app) |
+| Terminal size | Terminal font size (default 18). ⌘+ / ⌘- / ⌘0 change it while you work |
 | Terminal line height | Line spacing of the terminal (default 1.2×) |
 
 ## 4. Conversation view

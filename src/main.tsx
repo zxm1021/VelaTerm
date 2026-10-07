@@ -1,13 +1,21 @@
 import ReactDOM from "react-dom/client";
 import "@xterm/xterm/css/xterm.css";
-// Bundle JetBrains Mono locally for offline use instead of loading it from Google Fonts.
+// Bundle the terminal and UI monospace faces locally for offline use instead of loading them from Google Fonts.
+// JetBrains Mono stays because the conversation view and the UI chrome still open in it (--font-mono in
+// vlinx.css); Maple Mono is the terminal default. 500 and 600 are declared for both because CSS font matching
+// picks the nearest face: without them the UI headings and badges that ask for 600 would render at 700.
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
 import "@fontsource/jetbrains-mono/600.css";
 import "@fontsource/jetbrains-mono/700.css";
 import "@fontsource/jetbrains-mono/400-italic.css";
-// Embedded symbol fallback (U+23E9–23FA, about 1.5 KB) supplies media glyphs missing from JetBrains Mono, and
-// box drawing / block elements (U+2500–259F) come from JetBrains Mono itself so they match the cell width.
+import "@fontsource/maple-mono/400.css";
+import "@fontsource/maple-mono/500.css";
+import "@fontsource/maple-mono/600.css";
+import "@fontsource/maple-mono/700.css";
+import "@fontsource/maple-mono/400-italic.css";
+// Embedded symbol fallback (U+23E9–23FA, about 1.5 KB) supplies media glyphs missing from both faces, and
+// box drawing / block elements (U+2500–259F) come from JetBrains Mono itself so they match its cell width.
 import "./styles/fonts.css";
 import "./styles/index.css";
 import App from "./App";

@@ -12,7 +12,7 @@ pub struct FontCatalog {
 /// Full text families shipped with the frontend; symbol-only fallback subsets are not selectable.
 pub fn bundled_font_catalog() -> FontCatalog {
     FontCatalog {
-        families: vec!["JetBrains Mono".into()],
+        families: vec!["Maple Mono".into(), "JetBrains Mono".into()],
         system_fonts_available: false,
     }
 }
@@ -86,7 +86,7 @@ mod tests {
         assert!(catalog.system_fonts_available);
         assert_eq!(
             catalog.families,
-            ["JetBrains Mono", "User Font", "中文字体"]
+            ["JetBrains Mono", "Maple Mono", "User Font", "中文字体"]
         );
     }
 
@@ -94,7 +94,7 @@ mod tests {
     fn browser_catalog_does_not_claim_system_enumeration() {
         let catalog = bundled_font_catalog();
         assert!(!catalog.system_fonts_available);
-        assert_eq!(catalog.families, ["JetBrains Mono"]);
+        assert_eq!(catalog.families, ["Maple Mono", "JetBrains Mono"]);
     }
 
     #[cfg(feature = "native-menu-tests")]

@@ -59,7 +59,7 @@ it("saves and restores conversation typography without changing terminal typogra
   store.setChatFontSize(12.5);
   store.setChatLineHeight(1.5);
   const saved = loadSettings();
-  expect(saved).toMatchObject({ chatFontFamily: "Menlo", chatFontSize: 12.5, chatLineHeight: 1.5, termFontFamily: null, termFontSize: 13, termLineHeight: 1.2 });
+  expect(saved).toMatchObject({ chatFontFamily: "Menlo", chatFontSize: 12.5, chatLineHeight: 1.5, termFontFamily: null, termFontSize: 18, termLineHeight: 1.2 });
   expect(pushSetting).toHaveBeenLastCalledWith(SETTINGS_KEY, expect.stringContaining('"chatFontSize":12.5'));
   expect(document.documentElement.style.getPropertyValue("--chat-font")).toBe(fontStack("Menlo"));
   expect(document.documentElement.style.getPropertyValue("--chat-fs")).toBe("12.5px");
@@ -89,15 +89,15 @@ it("provides separate controls and resets only the selected conversation value",
   expect(useTermStore.getState().uiFontSize).toBeNull();
   fireEvent.click(screen.getByRole("button", { name: "Terminal" }));
   const terminalSize = within(screen.getByRole("group", { name: "Terminal size" }));
-  expect(terminalSize.getByTitle("Reset").textContent).toBe("13px");
+  expect(terminalSize.getByTitle("Reset").textContent).toBe("18px");
   fireEvent.click(terminalSize.getByTitle("Larger"));
-  expect(useTermStore.getState().termFontSize).toBe(13.5);
+  expect(useTermStore.getState().termFontSize).toBe(18.5);
   fireEvent.click(terminalSize.getByTitle("Reset"));
   fireEvent.click(screen.getByRole("button", { name: "Conversation view" }));
   const conversationSize = within(screen.getByRole("group", { name: "Conversation font size" }));
   fireEvent.click(conversationSize.getByTitle("Smaller"));
   expect(conversationSize.getByTitle("Reset").textContent).toBe("13px");
-  expect(useTermStore.getState().termFontSize).toBe(13);
+  expect(useTermStore.getState().termFontSize).toBe(18);
   fireEvent.click(within(screen.getByRole("group", { name: "Conversation line height" })).getByTitle("Larger"));
   expect(useTermStore.getState().chatLineHeight).toBe(1.3);
   expect(useTermStore.getState().termLineHeight).toBe(1.2);

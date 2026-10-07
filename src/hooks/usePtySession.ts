@@ -75,28 +75,28 @@ import { installWebkitImeFix, isWebkitEngine } from "../terminal/imeWebkitFix";
 import { installImeCaret } from "../terminal/imeCaret";
 import { detectAgentScreen, readScreenTail } from "../terminal/screenDetect";
 import { remapGrokDayCanvasToWhite } from "../terminal/grokBgRemap";
-import { fontStack, resolveTheme, xtermTheme } from "../theme";
+import { DEFAULT_TERMINAL_FONT_FAMILY, terminalFontStack, resolveTheme, xtermTheme } from "../theme";
 import type { AgentKind, Session } from "../types";
 
 /** Size mode: fit owns the PTY grid; mirror pins the grid and observes it. */
 export type SizeMode = "fit" | "mirror";
 
 // ─── Monospace font readiness gate ───────────────────────────────────
-// xterm caches measured glyph widths. Creating it before asynchronous JetBrains Mono loading records
+// xterm caches measured glyph widths. Creating it before asynchronous Maple Mono loading records
 // fallback widths, leaving spaced-out text after the real font appears until a resize. Wait once at
 // module scope, with a timeout that permits fallback rendering, and share readiness across terminals.
 //
-// Faces load lazily per unicode-range, so the Latin probe alone leaves the box drawing / block element face
-// (styles/fonts.css, U+2500-259F) unloaded. Probe it with a block glyph in both regular and bold: the DOM
-// renderer pads each character with `letter-spacing = cell width - measured width`, and a width measured
-// against the Consolas fallback stays cached after the real face arrives, leaving a seam after every block.
+// Faces load lazily per weight, so the Latin probe alone leaves the bold face unloaded. Probe it with a block
+// glyph in both regular and bold: the DOM renderer pads each character with
+// `letter-spacing = cell width - measured width`, and a width measured against the Consolas fallback stays
+// cached after the real face arrives, leaving a seam after every block.
 let fontsReady = false;
 const fontsReadyPromise: Promise<void> = (async () => {
   try {
     const probes: [string, string][] = [
-      ['16px "JetBrains Mono"', " "],
-      ['16px "JetBrains Mono"', "█"],
-      ['bold 16px "JetBrains Mono"', "█"],
+      [`16px "${DEFAULT_TERMINAL_FONT_FAMILY}"`, " "],
+      [`16px "${DEFAULT_TERMINAL_FONT_FAMILY}"`, "█"],
+      [`bold 16px "${DEFAULT_TERMINAL_FONT_FAMILY}"`, "█"],
     ];
     const pending = probes.filter(([font, text]) => !document.fonts.check(font, text));
     if (pending.length > 0) {
@@ -229,7 +229,7 @@ export function usePtySession(session: Session, cwd?: string, hidden?: boolean) 
     const fontState = useTermStore.getState();
 
     const term = new Terminal({
-      fontFamily: fontStack(fontState.termFontFamily),
+      fontFamily: terminalFontStack(fontState.termFontFamily),
       fontSize: fontState.termFontSize,
       lineHeight: fontState.termLineHeight,
       cursorBlink: true,
@@ -1016,7 +1016,7 @@ export function usePtySession(session: Session, cwd?: string, hidden?: boolean) 
   useEffect(() => {
     const term = termRef.current;
     if (!term) return;
-    const fam = fontStack(termFontFamily);
+    const fam = terminalFontStack(termFontFamily);
     if (term.options.fontFamily === fam && term.options.fontSize === termFontSize && term.options.lineHeight === termLineHeight) return;
     term.options.fontFamily = fam;
     term.options.fontSize = termFontSize;

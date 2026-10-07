@@ -50,7 +50,8 @@ export interface VisualSettings {
 }
 
 /** Initial typography; terminal and conversation preferences are saved independently. */
-export const DEFAULT_TERMINAL_FONT_SIZE = 13;
+export const DEFAULT_TERMINAL_FONT_SIZE = 18;
+export const DEFAULT_TERMINAL_FONT_FAMILY = "Maple Mono";
 export const DEFAULT_CONVERSATION_FONT_SIZE = 13.5;
 export const DEFAULT_TERMINAL_LINE_HEIGHT = 1.2;
 
@@ -63,7 +64,7 @@ export function normalizeTextLineHeight(value: number): number {
 }
 
 /**
- * Default monospace stack, kept in sync with --font-mono on :root in vlinx.css.
+ * Generic monospace stack, used by the conversation view and by fontStack() when no family is chosen.
  * Add "VlxSymbols" before monospace because programming fonts commonly lack newer symbols such as the U+23F5 ⏵
  * media triangle. The embedded subset font (see styles/fonts.css) works offline without a system installation and
  * avoids missing-glyph boxes □. Keep system "Symbola" afterward as an additional optional fallback.
@@ -86,6 +87,22 @@ const SYS_MONO_FALLBACK = 'ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Cons
 
 export const DEFAULT_MONO_STACK =
   `"JetBrains Mono", ${SYS_MONO_FALLBACK}, "VlxSymbols", "Symbola", ${CJK_FALLBACK}, monospace`;
+
+/**
+ * Terminal default, used when no family preference is saved. Kept separate from DEFAULT_MONO_STACK so the
+ * conversation view keeps JetBrains Mono while the terminal opens in Maple Mono.
+ * Maple Mono carries box drawing U+2500-257F and block elements U+2580-259F at its own 0.6 em advance, so no
+ * separate subset face is needed to keep xterm's cell width and the glyph width in agreement.
+ */
+export const DEFAULT_TERMINAL_MONO_STACK =
+  `"${DEFAULT_TERMINAL_FONT_FAMILY}", ${SYS_MONO_FALLBACK}, "VlxSymbols", "Symbola", ${CJK_FALLBACK}, monospace`;
+
+/** Resolve a terminal font-family string. An empty preference selects the Maple Mono default rather than the
+ * conversation view's stack, so "Default" in Settings means Maple Mono for the terminal. */
+export function terminalFontStack(family: string | null | undefined): string {
+  const f = family?.trim();
+  return f ? fontStack(f) : DEFAULT_TERMINAL_MONO_STACK;
+}
 
 /**
  * Build a font-family string with fallbacks from a primary font name:

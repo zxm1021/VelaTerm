@@ -3,7 +3,13 @@
 //! SettingsModal and the store share types while reducing the size of the main store.
 
 import { pushSetting } from "../ipc/settingsSync";
-import { DEFAULT_CONVERSATION_FONT_SIZE, DEFAULT_TERMINAL_FONT_SIZE, DEFAULT_TERMINAL_LINE_HEIGHT, normalizeTextSize, normalizeTextLineHeight } from "../theme";
+import {
+  DEFAULT_CONVERSATION_FONT_SIZE,
+  DEFAULT_TERMINAL_FONT_SIZE,
+  DEFAULT_TERMINAL_LINE_HEIGHT,
+  normalizeTextSize,
+  normalizeTextLineHeight,
+} from "../theme";
 import type {
   AccentChoice,
   DarkStyle,
@@ -148,9 +154,9 @@ export interface PersistedSettings {
   uiFontFamily: string | null;
   /** UI font size in pixels; null follows density without an inline `--ui-fs`. */
   uiFontSize: number | null;
-  /** Primary terminal monospace font; null uses the default stack. */
+  /** Primary terminal monospace font; null uses the terminal default (DEFAULT_TERMINAL_FONT_FAMILY). */
   termFontFamily: string | null;
-  /** Terminal font size in pixels, defaulting to 13. */
+  /** Terminal font size in pixels, defaulting to DEFAULT_TERMINAL_FONT_SIZE. */
   termFontSize: number;
   /** Line-height multiplier, independent of conversation typography. */
   termLineHeight: number;

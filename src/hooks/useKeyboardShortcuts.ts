@@ -25,6 +25,7 @@ import { isTauri } from "../ipc/transport";
 import { isShareSurface } from "../ipc/shareBase";
 import { env } from "../platform";
 import { useTermStore } from "../store/termStore";
+import { DEFAULT_TERMINAL_FONT_SIZE } from "../theme";
 import { activeAgentLocation, agentPickerUrl, navigateAgentPicker, newAgentPickerRoute, readAgentPickerRoute } from "../layout/NewAgentSession/navigation";
 import { clearTerminal, focusTerminal, getTerminal, selectAll as selectAllTerminalContent } from "../terminal/registry";
 import {
@@ -76,7 +77,7 @@ export function useKeyboardShortcuts() {
           const { termFontSize, setTermFontSize } = useTermStore.getState();
           if (activeSessionTabId()) {
             e.preventDefault();
-            if (isZero) setTermFontSize(13);
+            if (isZero) setTermFontSize(DEFAULT_TERMINAL_FONT_SIZE);
             else setTermFontSize(termFontSize + (isPlus ? 0.5 : -0.5));
           }
           return;
