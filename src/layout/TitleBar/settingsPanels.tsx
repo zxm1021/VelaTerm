@@ -175,7 +175,9 @@ export function ShortcutsPanel() {
           ? t("settings.scConflictTabs")
           : clash === "clear"
             ? t("settings.scConflictClear")
-            : t("settings.scConflict", t(SC_LABEL[clash])),
+            : clash === "panels"
+              ? t("settings.scConflictPanels")
+              : t("settings.scConflict", t(SC_LABEL[clash])),
       );
       return;
     }

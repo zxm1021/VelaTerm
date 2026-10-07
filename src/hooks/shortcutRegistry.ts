@@ -55,7 +55,7 @@ export const IS_MAC =
 export const IS_PLAIN_BROWSER = env.isBrowser && !env.isRemoteWindow;
 
 /** Whether "mod" means Cmd on this client. Desktop macOS binds Cmd; every other shell binds Ctrl. */
-const MOD_IS_CMD = IS_MAC && !IS_PLAIN_BROWSER;
+export const MOD_IS_CMD = IS_MAC && !IS_PLAIN_BROWSER;
 
 /**
  * Whether the event carries this client's mod modifier, and only that one.

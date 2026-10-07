@@ -11,7 +11,9 @@ v0.1.91 is the first public release; earlier version numbers were internal itera
 
 ### Terminal
 
-- **The terminal opens in Maple Mono at size 18.** Both are defaults, not fixed choices: the Settings font and size fields still override them, and ⌘0 returns the size to 18. The conversation view and the rest of the UI keep JetBrains Mono. Maple Mono ships with the app, so no installation is needed, and it covers box drawing and block characters at its own advance, which keeps TUI frames and progress bars aligned.
+- **The terminal opens in Maple Mono at size 18.** Both are defaults, not fixed choices: the Settings font and size fields still override them, and ⇧⌘0 returns the size to 18. The conversation view and the rest of the UI keep JetBrains Mono. Maple Mono ships with the app, so no installation is needed, and it covers box drawing and block characters at its own advance, which keeps TUI frames and progress bars aligned.
+
+- **⌘B, ⌘0 and ⇧⌘Enter show or hide the side panels.** ⌘B toggles the sidebar, ⌘0 the info panel, and ⇧⌘Enter hides both at once — or brings both back when they are already hidden. They match the title-bar buttons. The keys are fixed and cannot be rebound. The font-size reset moved to ⇧⌘0 to make room for ⌘0; outside the macOS desktop app the reset stays on Ctrl+0, since these chords are Cmd-only and no bare-Ctrl shell key is taken. Text fields and editors keep their own bindings, so ⌘B still bolds text in the markdown editor.
 
 - **⌘K clears the active terminal.** The active terminal's buffer and scrollback are cleared and focus returns to it, matching the context menu's “Clear” action. The key is fixed and cannot be rebound. On Windows, Linux and in browser clients Ctrl+K is left untouched, because it is the shell's kill-line key.
 

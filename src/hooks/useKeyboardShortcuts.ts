@@ -1,8 +1,12 @@
 //! Global keyboard shortcuts.
 //! - Cmd/Ctrl+1–9 focuses the numbered open tab and is fixed to tab positions.
-//! - Cmd/Ctrl++/-/0 changes or resets terminal font size and is fixed to those semantics.
+//! - Cmd/Ctrl++/- changes terminal font size and Cmd/Ctrl+0 resets it (Shift+Cmd+0 where mod is Cmd,
+//!   because bare Cmd+0 toggles the info panel); fixed to those semantics.
 //! - Cmd+K clears the active terminal on macOS and is fixed to that key; elsewhere Ctrl+K stays the
 //!   shell's kill-line key.
+//! - Cmd+B, Cmd+0 and Shift+Cmd+Enter show or hide the sidebar, the info panel, and both at once.
+//!   Cmd-only on every platform so no bare-Ctrl shell key is taken; text fields and editors keep the
+//!   chords they own (Cmd+B is bold in the markdown editor).
 //! - Settings may remap temporary-terminal creation, desktop browser tabs, pane/tab closure, both
 //!   split directions, terminal/global search, terminal selection, and document save. Defaults live in shortcutRegistry
 //!   and overrides in vlx-settings. Remapping changes only triggers, not contextual behavior.
@@ -31,6 +35,8 @@ import { clearTerminal, focusTerminal, getTerminal, selectAll as selectAllTermin
 import {
   DEFAULT_BINDINGS,
   IS_MAC,
+  IS_PLAIN_BROWSER,
+  MOD_IS_CMD,
   hasMod,
   matchCombo,
   type ShortcutAction,
@@ -54,6 +60,26 @@ export function useKeyboardShortcuts() {
       return activeSessionId;
     };
 
+    // Whether the event targets a place where the user is typing or formatting text. Focused terminals
+    // are excluded: their hidden helper textarea is a textarea too, and the panel toggles must keep
+    // working from the terminal — the most common place to press them. Used only by the panel toggles,
+    // whose Cmd+B collides with the markdown editor's Mod-b (bold) on a document tab.
+    const isTypingTarget = (target: EventTarget | null): boolean => {
+      if (!(target instanceof HTMLElement)) return false;
+      const { activeSessionId } = useTermStore.getState();
+      const terminal = activeSessionId ? getTerminal(activeSessionId) : undefined;
+      if (terminal?.element?.contains(target)) return false;
+      // Walk up as well as test the node itself: a rich-text editor marks only its root as editable, so
+      // a keystroke inside it targets a descendant. The attribute selector also covers environments that
+      // do not implement isContentEditable.
+      return (
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target.isContentEditable ||
+        !!target.closest('[contenteditable=""], [contenteditable="true"]')
+      );
+    };
+
     const handler = (e: KeyboardEvent) => {
       // ── Fixed shortcut 1: Cmd+1–9 selects the nth tab ──
       const tabIdx = digitIndex(e);
@@ -67,17 +93,24 @@ export function useKeyboardShortcuts() {
         return;
       }
 
-      // ── Fixed shortcut 2: Cmd++/-/0 changes or resets terminal font size ──
+      // ── Fixed shortcut 2: Cmd++/- and the font-size reset ──
       // Apply only to active session tabs; document/browser tabs retain their own handling.
+      //
+      // Reset moved to Shift+Cmd+0 where mod is Cmd, because bare Cmd+0 now toggles the info panel (see
+      // below) and the larger/smaller/reset triple stays on one key row. Everywhere else bare mod+0
+      // keeps resetting, so Ctrl+0 users lose nothing. Shifted +/- are the shifted faces of the same
+      // physical keys and stay unclaimed, so this branch falls through rather than consuming them.
       if (hasMod(e)) {
         const isPlus = e.key === "+" || e.key === "=" || e.code === "Equal";
         const isMinus = e.key === "-" || e.key === "_" || e.code === "Minus";
-        const isZero = e.key === "0" || e.code === "Digit0";
-        if (isPlus || isMinus || isZero) {
+        const isZero = e.key === "0" || e.key === ")" || e.code === "Digit0";
+        const adjusts = (isPlus || isMinus) && !e.shiftKey;
+        const resets = isZero && e.shiftKey === MOD_IS_CMD;
+        if (adjusts || resets) {
           const { termFontSize, setTermFontSize } = useTermStore.getState();
           if (activeSessionTabId()) {
             e.preventDefault();
-            if (isZero) setTermFontSize(DEFAULT_TERMINAL_FONT_SIZE);
+            if (resets) setTermFontSize(DEFAULT_TERMINAL_FONT_SIZE);
             else setTermFontSize(termFontSize + (isPlus ? 0.5 : -0.5));
           }
           return;
@@ -101,6 +134,36 @@ export function useKeyboardShortcuts() {
           focusTerminal(id);
         }
         return;
+      }
+
+      // ── Fixed shortcut 4: Cmd+B / Cmd+0 / Shift+Cmd+Enter toggle the side panels ──
+      // Cmd+B and Cmd+0 show or hide the sidebar and the info panel, matching the title-bar buttons and
+      // the panel toggles VS Code uses; Shift+Cmd+Enter drives both sides as one "clear the chrome" key
+      // rather than two independent flips.
+      //
+      // These chords are Cmd-only on every platform: Cmd is free on macOS, while the fixed shortcuts
+      // elsewhere stay on Ctrl+Alt so no shell key is stolen (bare Ctrl+B is the shell's backward-char,
+      // Ctrl+0 a terminal reset, and Alt alone is terminal Meta). Plain-browser clients keep the native
+      // browser behavior, where Cmd+B and Cmd+0 are not ours to take.
+      //
+      // Checked after the font-size branch above, which claims Shift+Cmd+0 first and leaves bare Cmd+0
+      // to fall through to here.
+      if (!IS_PLAIN_BROWSER && IS_MAC && e.metaKey && !e.ctrlKey && !e.altKey) {
+        const isLeftPanel = !e.shiftKey && e.code === "KeyB";
+        const isRightPanel = !e.shiftKey && (e.code === "Digit0" || e.key === ")" || e.key === "0");
+        const isBothPanels = e.shiftKey && e.code === "Enter";
+        if (isLeftPanel || isRightPanel || isBothPanels) {
+          // Never steal a chord from a text field or a rich-text editor. On a document tab Cmd+B is
+          // bold in the markdown editor, and the panel toggles must not swallow it.
+          if (e.defaultPrevented || e.isComposing || e.keyCode === 229 || e.repeat) return;
+          if (isTypingTarget(e.target)) return;
+          e.preventDefault();
+          const { toggleLeft, toggleRight, toggleBothPanels } = useTermStore.getState();
+          if (isLeftPanel) toggleLeft();
+          else if (isRightPanel) toggleRight();
+          else toggleBothPanels();
+          return;
+        }
       }
 
       // ── Remappable actions: exactly match the user override or default binding ──

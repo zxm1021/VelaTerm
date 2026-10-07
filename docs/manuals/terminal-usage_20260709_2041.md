@@ -96,7 +96,7 @@ Settings ▸ Advanced ▸ "Terminal renderer" offers DOM (default) and WebGL. DO
 
 ## 10. Common shortcuts
 
-The table lists the defaults of the macOS desktop app. The Windows and Linux apps use Ctrl+Alt instead of ⌘ for most actions (split down is Ctrl+Alt+E, search all sessions is Ctrl+Alt+G, select all is Ctrl+Shift+A, and save stays Ctrl+S). Browser clients use Ctrl-based defaults that avoid the browser's own shortcuts. Settings ▸ Shortcuts shows the exact bindings on your system, and every action except tab switching, font size and clearing the terminal can be changed there.
+The table lists the defaults of the macOS desktop app. The Windows and Linux apps use Ctrl+Alt instead of ⌘ for most actions (split down is Ctrl+Alt+E, search all sessions is Ctrl+Alt+G, select all is Ctrl+Shift+A, and save stays Ctrl+S). Browser clients use Ctrl-based defaults that avoid the browser's own shortcuts. Settings ▸ Shortcuts shows the exact bindings on your system, and every action except tab switching, font size, clearing the terminal and the side-panel toggles can be changed there.
 
 On macOS, Option is sent to the running program as Meta (an ESC prefix), so programs can use Option-based shortcuts — Option+P opens the model picker in Claude Code, for example. Option+letter therefore no longer types the layout's alternate character (Option+P types no "π"). This matches Ghostty's `macos-option-as-alt`.
 
@@ -113,5 +113,8 @@ On macOS, Option is sent to the running program as Meta (an ESC prefix), so prog
 | Select all in the focused terminal | ⌘A |
 | Save document | ⌘S |
 | Go to tab N | ⌘1–9 (fixed; Ctrl+1–9 outside the macOS desktop app) |
-| Terminal font larger / smaller / reset | ⌘+ / ⌘- / ⌘0 (fixed; Ctrl+ / Ctrl- / Ctrl+0 outside the macOS desktop app) |
+| Terminal font larger / smaller / reset | ⌘+ / ⌘- / ⇧⌘0 (fixed; Ctrl+ / Ctrl- / Ctrl+0 outside the macOS desktop app) |
+| Show / hide the sidebar | ⌘B (fixed; macOS desktop app only) |
+| Show / hide the info panel | ⌘0 (fixed; macOS desktop app only) |
+| Show / hide both side panels | ⇧⌘Enter (fixed; macOS desktop app only) |
 | Clear the terminal | ⌘K (fixed; macOS only — elsewhere Ctrl+K stays the shell's kill-line key) |

@@ -1420,6 +1420,10 @@ interface TermStore {
   // Layout.
   toggleLeft: () => void;
   toggleRight: () => void;
+  /** Toggle both side panels together: either one is still open, so both close; only when both are
+   *  already hidden do they come back. Keeps Shift+Cmd+Enter a single "hide the chrome" key rather
+   *  than a pair of independent flips that can leave one side visible. */
+  toggleBothPanels: () => void;
   /** Record the host's mirror-mode switch. Turning it off leaves the current arrangement in place. */
   setMirrorEnabled: (enabled: boolean) => void;
   /** Record how many remote clients the backend currently has attached. */
@@ -4182,6 +4186,13 @@ export const useTermStore = create<TermStore>((set, get) => ({
 
   toggleLeft: () => set((s) => ({ leftCollapsed: !s.leftCollapsed })),
   toggleRight: () => set((s) => ({ rightCollapsed: !s.rightCollapsed })),
+  toggleBothPanels: () =>
+    set((s) => {
+      // Either panel still open means the intent is to clear the screen; both closed is the only state
+      // that asks for them back. Independent flips would toggle each side on alternate presses instead.
+      const collapse = !(s.leftCollapsed && s.rightCollapsed);
+      return { leftCollapsed: collapse, rightCollapsed: collapse };
+    }),
 
   setMirrorEnabled: (enabled) => set({ mirrorEnabled: enabled }),
 

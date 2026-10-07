@@ -725,6 +725,7 @@ const ja: typeof en = {
     "VelaTerm がバックグラウンドにあっても、どのアプリからでも使えます。オフにするには、ショートカットをクリックして Delete キーを押します。",
   "settings.scConflictTabs": "タブの切り替えで既に使用されています",
   "settings.scConflictClear": "ターミナルのクリアで既に使用されています",
+  "settings.scConflictPanels": "サイドパネルの表示切り替えで既に使用されています",
   "settings.scInUse": "このショートカットは他のアプリで使用されています",
   "settings.scReset": "デフォルトに戻す", // Restore defaults
   "settings.scConflict": (label: string) =>

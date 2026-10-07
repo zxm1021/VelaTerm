@@ -2,6 +2,8 @@
 
 ### Terminal
 
+- **⌘B, ⌘0 y ⇧⌘Enter muestran u ocultan los paneles laterales.** ⌘B alterna la barra lateral, ⌘0 el panel de información y ⇧⌘Enter oculta ambos a la vez, o los recupera cuando ya están ocultos. Coinciden con los botones de la barra de título. Las teclas son fijas y no se pueden cambiar. El restablecimiento del tamaño de fuente pasa a ⇧⌘0 para dejar libre ⌘0; fuera de la app de escritorio para macOS sigue en Ctrl+0, ya que estas combinaciones solo usan Cmd y no ocupan ninguna tecla Ctrl pura del shell. Los campos de texto y los editores conservan sus propios atajos, así que ⌘B sigue poniendo el texto en negrita en el editor de Markdown.
+
 - **⌘K limpia el terminal activo.** Se vacían el búfer y el historial del terminal activo y el foco vuelve a él, igual que la acción «Limpiar» del menú contextual. La tecla es fija y no se puede reasignar. En Windows, Linux y los clientes de navegador, Ctrl+K no se toca, porque es la tecla kill-line del shell.
 
 - **La tecla Option se envía a los programas de terminal como Meta.** En macOS, mantener Option ahora envía un prefijo ESC en lugar del carácter especial de la distribución, de modo que funcionan los atajos de agente basados en Option: Option+P abre el selector de modelo de Claude Code. Coincide con `macos-option-as-alt` de Ghostty. El coste es que Option+letra ya no escribe el carácter alternativo de la distribución (Option+P ya no escribe «π»).

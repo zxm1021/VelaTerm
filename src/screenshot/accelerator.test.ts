@@ -41,6 +41,14 @@ describe("conflicts with in-app shortcuts", () => {
     expect(inAppConflict("Cmd+K", {})).toBe(IS_MAC ? "clear" : null);
   });
 
+  it("detects the panel toggles on macOS only", () => {
+    expect(inAppConflict("Cmd+B", {})).toBe(IS_MAC ? "panels" : null);
+    expect(inAppConflict("Cmd+0", {})).toBe(IS_MAC ? "panels" : null);
+    expect(inAppConflict("Shift+Cmd+Enter", {})).toBe(IS_MAC ? "panels" : null);
+    // Shift+Cmd+0 resets the terminal font size; it is not a panel chord.
+    expect(inAppConflict("Shift+Cmd+0", {})).toBeNull();
+  });
+
   it("detects an overridden in-app binding regardless of modifier order", () => {
     expect(inAppConflict(`Shift+${primary}+K`, { search: "mod+shift+k" })).toBe("search");
     expect(sameChord("mod+shift+k", `Shift+${primary}+K`)).toBe(true);

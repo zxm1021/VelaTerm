@@ -89,14 +89,15 @@ export function sameChord(inAppCombo: string, accel: string): boolean {
 }
 
 /**
- * The in-app action this accelerator would take over, or "tabs" for the fixed Cmd/Ctrl+1–9 tab
- * switching, or "clear" for the fixed Cmd+K terminal clear. A global hotkey is consumed by the
- * system before VelaTerm sees the key, so claiming one of these would make it unreachable.
+ * The in-app action this accelerator would take over, or a fixed-shortcut name ("tabs", "clear",
+ * "panels") when it collides with one of the chords that cannot be remapped. A global hotkey is
+ * consumed by the system before VelaTerm sees the key, so claiming one of these would make it
+ * unreachable.
  */
 export function inAppConflict(
   accel: string,
   overrides: Partial<Record<ShortcutAction, string>>,
-): ShortcutAction | "tabs" | "clear" | null {
+): ShortcutAction | "tabs" | "clear" | "panels" | null {
   const p = parse(accel);
   const target = canonical(p);
   for (const action of Object.keys(DEFAULT_BINDINGS) as ShortcutAction[]) {
@@ -106,5 +107,11 @@ export function inAppConflict(
   if (/^[1-9]$/.test(p.key) && p.mods.size === 1 && p.mods.has(primary)) return "tabs";
   // Cmd+K clears the terminal on macOS only; elsewhere Ctrl+K stays the shell's kill-line key.
   if (IS_MAC && p.key === "K" && p.mods.size === 1 && p.mods.has("Cmd")) return "clear";
+  // Panel toggles are Cmd-only on every platform: Cmd+B / Cmd+0 / Shift+Cmd+Enter. On non-macOS
+  // shells Cmd is the Windows key, which the in-app listener never matches, so only macOS collides.
+  if (IS_MAC && p.mods.has("Cmd")) {
+    if (p.mods.size === 1 && (p.key === "B" || p.key === "0")) return "panels";
+    if (p.mods.size === 2 && p.mods.has("Shift") && p.key === "ENTER") return "panels";
+  }
   return null;
 }

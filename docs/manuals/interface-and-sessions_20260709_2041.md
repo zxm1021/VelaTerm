@@ -20,7 +20,7 @@ Updated: 2026-09-25 10:21
 
 Remote Access and Connect to Remote Server appear in the desktop app; see [Remote Development & Management](remote-development-guide_20260709_2041.md). Feedback opens the VelaTerm feedback page in your browser. On Windows and Linux, pressing Alt shows a menu bar with File, Terminal and Help.
 
-Both side panels can be hidden with the title bar buttons and resized by dragging their edges.
+Both side panels can be hidden with the title bar buttons and resized by dragging their edges. The same toggles have shortcuts in the macOS desktop app: ⌘B for the sidebar, ⌘0 for the info panel, and ⇧⌘Enter for both at once.
 
 ## 2. The tree: projects, collections, groups, sessions
 

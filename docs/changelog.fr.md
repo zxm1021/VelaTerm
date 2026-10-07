@@ -2,6 +2,8 @@
 
 ### Terminal
 
+- **⌘B, ⌘0 et ⇧⌘Entrée affichent ou masquent les panneaux latéraux.** ⌘B bascule la barre latérale, ⌘0 le panneau d’informations, et ⇧⌘Entrée masque les deux d’un coup — ou les rétablit lorsqu’ils sont déjà masqués. Ils correspondent aux boutons de la barre de titre. Ces touches sont fixes et ne peuvent pas être modifiées. La réinitialisation de la taille de police passe à ⇧⌘0 pour libérer ⌘0 ; en dehors de l’application de bureau macOS, elle reste sur Ctrl+0, car ces combinaisons n’utilisent que Cmd et n’occupent aucune touche Ctrl seule du shell. Les champs de texte et les éditeurs conservent leurs propres raccourcis : ⌘B met donc toujours le texte en gras dans l’éditeur Markdown.
+
 - **⌘K efface le terminal actif.** Le tampon et l'historique du terminal actif sont effacés et le focus y revient, comme l'action « Effacer » du menu contextuel. La touche est fixe et ne peut pas être réaffectée. Sous Windows, Linux et dans les clients navigateur, Ctrl+K reste intact, car c'est la touche kill-line du shell.
 
 - **La touche Option est envoyée aux programmes de terminal en tant que Meta.** Sous macOS, maintenir Option envoie désormais un préfixe ESC au lieu du caractère spécial de la disposition, ce qui fait fonctionner les raccourcis d'agent basés sur Option : Option+P ouvre le sélecteur de modèle de Claude Code. Cela correspond à `macos-option-as-alt` de Ghostty. Le prix : Option+lettre ne tape plus le caractère alternatif de la disposition (Option+P ne tape plus « π »).

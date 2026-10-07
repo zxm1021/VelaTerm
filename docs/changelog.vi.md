@@ -2,6 +2,8 @@
 
 ### Thiết bị đầu cuối
 
+- **⌘B, ⌘0 và ⇧⌘Enter hiện hoặc ẩn các bảng bên.** ⌘B chuyển thanh bên, ⌘0 chuyển bảng thông tin, và ⇧⌘Enter ẩn cả hai cùng lúc — hoặc đưa cả hai trở lại khi chúng đã bị ẩn. Chúng khớp với các nút trên thanh tiêu đề. Các phím này cố định và không thể đổi. Việc đặt lại cỡ chữ chuyển sang ⇧⌘0 để nhường ⌘0; ngoài ứng dụng máy tính macOS, nó vẫn là Ctrl+0, vì các tổ hợp này chỉ dùng Cmd và không chiếm phím Ctrl trần của shell. Ô nhập liệu và trình soạn thảo giữ phím riêng của chúng, nên ⌘B vẫn in đậm văn bản trong trình soạn thảo Markdown.
+
 - **⌘K xóa thiết bị đầu cuối đang hoạt động.** Bộ đệm và lịch sử cuộn của thiết bị đầu cuối đang hoạt động được xóa và tiêu điểm quay lại đó, giống thao tác “Xóa” trong menu ngữ cảnh. Phím này cố định và không thể gán lại. Trên Windows, Linux và ứng dụng khách trình duyệt, Ctrl+K được giữ nguyên vì đó là phím kill-line của shell.
 
 - **Phím Option được gửi tới chương trình thiết bị đầu cuối dưới dạng Meta.** Trên macOS, giữ Option giờ gửi tiền tố ESC thay vì ký tự đặc biệt của bố cục bàn phím, nên các phím tắt tác nhân dựa trên Option hoạt động: Option+P mở bộ chọn mô hình của Claude Code. Điều này khớp với `macos-option-as-alt` của Ghostty. Cái giá là Option+chữ không còn nhập ký tự thay thế của bố cục nữa (Option+P không còn nhập “π”).

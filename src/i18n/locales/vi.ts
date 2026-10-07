@@ -720,6 +720,7 @@ const vi: typeof en = {
     "Dùng được trong mọi ứng dụng, kể cả khi VelaTerm chạy nền. Để tắt, nhấp vào phím tắt rồi nhấn Delete.",
   "settings.scConflictTabs": "Đã dùng để chuyển thẻ",
   "settings.scConflictClear": "Đã dùng để xóa màn hình thiết bị đầu cuối",
+  "settings.scConflictPanels": "Đã dùng để hiện hoặc ẩn các bảng bên",
   "settings.scInUse": "Phím tắt này đang được ứng dụng khác sử dụng",
   "settings.scReset": "Khôi phục mặc định",
   "settings.scConflict": (label: string) => `Đã được dùng bởi “${label}”`,

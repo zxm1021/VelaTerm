@@ -40,7 +40,7 @@ The light and dark themes are switched in the title bar (follow system, dark, li
 | Command suggestions | "Automatic", "On Tab" or "Off". Takes effect immediately, including in open terminals; hidden where it is not supported. See [Command suggestions](terminal-completion_20260908.md) |
 | Default shell | Shell for new terminals. Shown on Windows, where several shells are available; macOS and Linux always use the system shell |
 | Terminal font | Font of the terminal (default Maple Mono, which ships with the app) |
-| Terminal size | Terminal font size (default 18). ⌘+ / ⌘- / ⌘0 change it while you work |
+| Terminal size | Terminal font size (default 18). ⌘+ / ⌘- change it and ⇧⌘0 returns it to the default while you work |
 | Terminal line height | Line spacing of the terminal (default 1.2×) |
 
 ## 4. Conversation view
@@ -116,7 +116,7 @@ Click an action's key combination, then press the new combination; Escape cancel
 
 **Regular browsers.** When you use VelaTerm in a regular browser (URL remote access), the browser itself uses many ⌘ and Ctrl combinations, so the Windows and Linux bindings above apply on every system, and the settings page shows them that way. The exception is a browser on macOS, where split right and split down stay ⌘D and ⌘⇧D. Remote-connection windows of the desktop app use the desktop bindings.
 
-**Fixed keys** that cannot be changed: ⌘1–9 switches tabs, ⌘+ / ⌘- / ⌘0 changes or resets the terminal font size (Ctrl on Windows, Linux and in browsers), and ⌘K clears the active terminal (macOS only; elsewhere Ctrl+K remains the shell's kill-line key).
+**Fixed keys** that cannot be changed: ⌘1–9 switches tabs, ⌘+ / ⌘- changes the terminal font size and ⇧⌘0 resets it (Ctrl+ / Ctrl- / Ctrl+0 on Windows, Linux and in browsers), ⌘K clears the active terminal (macOS only; elsewhere Ctrl+K remains the shell's kill-line key), and ⌘B / ⌘0 / ⇧⌘Enter show or hide the sidebar, the info panel, or both at once (macOS only; these chords are Cmd-only so no bare-Ctrl shell key is taken).
 
 **Terminal selection.** Select all applies only while a terminal has keyboard focus. Text fields and conversation views retain their normal selection behavior. Plain Ctrl+A remains available to the shell unless you explicitly assign it to this action.
 

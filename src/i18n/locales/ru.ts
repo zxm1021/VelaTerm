@@ -735,6 +735,7 @@ const ru: typeof en = {
     "Работает в любом приложении, даже когда VelaTerm в фоне. Чтобы отключить, нажмите на сочетание, а затем на клавишу Delete.",
   "settings.scConflictTabs": "Уже используется для переключения вкладок",
   "settings.scConflictClear": "Уже используется для очистки терминала",
+  "settings.scConflictPanels": "Уже используется для показа или скрытия боковых панелей",
   "settings.scInUse": "Это сочетание уже занято другим приложением",
   "settings.scReset": "Сбросить по умолчанию", // Restore defaults
   "settings.scConflict": (label: string) => `Уже используется «${label}»`, // conflict

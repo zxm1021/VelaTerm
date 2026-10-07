@@ -714,6 +714,7 @@ const zhTW: typeof en = {
     "在任何應用程式中都能使用，VelaTerm 在背景執行時同樣有效。如需關閉，點一下快捷鍵後按 Delete 鍵。",
   "settings.scConflictTabs": "已用於切換分頁",
   "settings.scConflictClear": "已用於清除終端機",
+  "settings.scConflictPanels": "已用於顯示或隱藏左右側欄",
   "settings.scInUse": "此快捷鍵已被其他應用程式使用",
   "settings.scReset": "還原為預設", // Restore defaults
   "settings.scConflict": (label: string) => `已被「${label}」使用`, // conflict
