@@ -238,6 +238,12 @@ export function usePtySession(session: Session, cwd?: string, hidden?: boolean) 
       // In mouse-reporting TUIs, enable macOS Option-drag forced selection like iTerm2; otherwise xterm
       // forwards all dragging to the app and users cannot select/copy text.
       macOptionClickForcesSelection: true,
+      // Encode macOS Option as a Meta (ESC) prefix so agents receive meta+<key>: Claude Code's Option+P
+      // model picker, Option+T thinking toggle, Option+O fast mode. Without it Option+letter is sent as
+      // the layout's special character (Option+P becomes "π") and those keys never match. Matches
+      // Ghostty's `macos-option-as-alt = true`. xterm checks browser.isMac internally, so this is inert
+      // on Windows and Linux, where the Ctrl+Alt app shortcuts are unaffected.
+      macOptionIsMeta: true,
       // ─── Terminal rendering options ───
       // Enforce minimum contrast so ANSI white remains readable on light themes.
       minimumContrastRatio: 4.5,

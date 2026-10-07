@@ -98,6 +98,8 @@ Settings ▸ Advanced ▸ "Terminal renderer" offers DOM (default) and WebGL. DO
 
 The table lists the defaults of the macOS desktop app. The Windows and Linux apps use Ctrl+Alt instead of ⌘ for most actions (split down is Ctrl+Alt+E, search all sessions is Ctrl+Alt+G, select all is Ctrl+Shift+A, and save stays Ctrl+S). Browser clients use Ctrl-based defaults that avoid the browser's own shortcuts. Settings ▸ Shortcuts shows the exact bindings on your system, and every action except tab switching, font size and clearing the terminal can be changed there.
 
+On macOS, Option is sent to the running program as Meta (an ESC prefix), so programs can use Option-based shortcuts — Option+P opens the model picker in Claude Code, for example. Option+letter therefore no longer types the layout's alternate character (Option+P types no "π"). This matches Ghostty's `macos-option-as-alt`.
+
 | Action | Shortcut |
 |--------|----------|
 | Open project | ⌘O |

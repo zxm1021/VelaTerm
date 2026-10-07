@@ -4,6 +4,8 @@
 
 - **⌘K 清空当前终端。** 清空当前终端的缓冲区和回滚内容，并把焦点交还给终端，与右键菜单的「清屏」一致。该键为固定快捷键，不可修改。Windows、Linux 和浏览器客户端上的 Ctrl+K 保持不变，因为它仍是 shell 的 kill-line 键。
 
+- **Option 键作为 Meta 发送给终端程序。** 在 macOS 上，按住 Option 现在发送 ESC 前缀，而不再输入当前键盘布局的特殊字符，因此基于 Option 的智能体快捷键可以正常工作：Option+P 打开 Claude Code 的模型选择界面。这与 Ghostty 的 `macos-option-as-alt` 一致。代价是 Option+字母不再输入布局的替代字符（Option+P 不再输入「π」）。
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ AI 重命名会按智能体记住所选模型和推理强度。

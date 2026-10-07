@@ -4,6 +4,8 @@
 
 - **⌘K 清空目前終端機。** 清空目前終端機的緩衝區與捲動緩衝，並把焦點交還給終端機，與右鍵選單的「清除」一致。該鍵為固定快速鍵，不可修改。Windows、Linux 與瀏覽器用戶端上的 Ctrl+K 維持不變，因為它仍是 shell 的 kill-line 鍵。
 
+- **Option 鍵作為 Meta 傳送給終端機程式。** 在 macOS 上，按住 Option 現在傳送 ESC 前置字元，而不再輸入目前鍵盤佈局的特殊字元，因此以 Option 為基礎的代理快速鍵可以正常運作：Option+P 開啟 Claude Code 的模型選擇介面。這與 Ghostty 的 `macos-option-as-alt` 一致。代價是 Option+字母不再輸入佈局的替代字元（Option+P 不再輸入「π」）。
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ AI 重新命名會依智慧代理記住所選模型與推理強度。

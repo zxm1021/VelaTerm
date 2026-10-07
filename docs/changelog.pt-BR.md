@@ -4,6 +4,8 @@
 
 - **⌘K limpa o terminal ativo.** O buffer e o histórico do terminal ativo são limpos e o foco volta para ele, igual à ação “Limpar” do menu de contexto. A tecla é fixa e não pode ser reatribuída. No Windows, Linux e nos clientes de navegador, Ctrl+K permanece intacto, pois é a tecla kill-line do shell.
 
+- **A tecla Option é enviada aos programas de terminal como Meta.** No macOS, manter Option agora envia um prefixo ESC em vez do caractere especial do layout, de modo que os atalhos de agente baseados em Option funcionam: Option+P abre o seletor de modelo do Claude Code. Isso corresponde ao `macos-option-as-alt` do Ghostty. O custo é que Option+letra não digita mais o caractere alternativo do layout (Option+P não digita mais “π”).
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ A renomeação com IA lembra o modelo e o nível de raciocínio escolhidos para cada agente.

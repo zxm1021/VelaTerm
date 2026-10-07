@@ -4,6 +4,8 @@
 
 - **⌘K efface le terminal actif.** Le tampon et l'historique du terminal actif sont effacés et le focus y revient, comme l'action « Effacer » du menu contextuel. La touche est fixe et ne peut pas être réaffectée. Sous Windows, Linux et dans les clients navigateur, Ctrl+K reste intact, car c'est la touche kill-line du shell.
 
+- **La touche Option est envoyée aux programmes de terminal en tant que Meta.** Sous macOS, maintenir Option envoie désormais un préfixe ESC au lieu du caractère spécial de la disposition, ce qui fait fonctionner les raccourcis d'agent basés sur Option : Option+P ouvre le sélecteur de modèle de Claude Code. Cela correspond à `macos-option-as-alt` de Ghostty. Le prix : Option+lettre ne tape plus le caractère alternatif de la disposition (Option+P ne tape plus « π »).
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ Le renommage par IA mémorise le modèle et le niveau de raisonnement choisis pour chaque agent.

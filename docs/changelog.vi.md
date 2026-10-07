@@ -4,6 +4,8 @@
 
 - **⌘K xóa thiết bị đầu cuối đang hoạt động.** Bộ đệm và lịch sử cuộn của thiết bị đầu cuối đang hoạt động được xóa và tiêu điểm quay lại đó, giống thao tác “Xóa” trong menu ngữ cảnh. Phím này cố định và không thể gán lại. Trên Windows, Linux và ứng dụng khách trình duyệt, Ctrl+K được giữ nguyên vì đó là phím kill-line của shell.
 
+- **Phím Option được gửi tới chương trình thiết bị đầu cuối dưới dạng Meta.** Trên macOS, giữ Option giờ gửi tiền tố ESC thay vì ký tự đặc biệt của bố cục bàn phím, nên các phím tắt tác nhân dựa trên Option hoạt động: Option+P mở bộ chọn mô hình của Claude Code. Điều này khớp với `macos-option-as-alt` của Ghostty. Cái giá là Option+chữ không còn nhập ký tự thay thế của bố cục nữa (Option+P không còn nhập “π”).
+
 ## v0.2.9 — 2026-10-07
 
 - ✨ Tính năng đổi tên bằng AI ghi nhớ mô hình và mức độ suy luận đã chọn cho từng tác nhân.
