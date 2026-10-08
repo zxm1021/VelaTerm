@@ -463,6 +463,9 @@ const vi: typeof en = {
   "settings.usageRefresh": "Làm mới mức sử dụng",
   "settings.autoContinue": "Tiếp tục sau khi đặt lại giới hạn",
   "settings.autoContinueHint": "Khi Claude hoặc Codex dừng do giới hạn sử dụng 5 giờ hoặc hằng tuần, tác vụ sẽ tự động tiếp tục sau khi giới hạn được đặt lại.",
+  "settings.waterReminder": "Nhắc uống nước",
+  "settings.waterReminderHint":
+    "Vào ngày thường, khóa VelaTerm trong 20 giây vào 10:00–12:00 và 14:00–19:00, mỗi giờ một lần. Hộp thoại không thể đóng hay bỏ qua; chỉ ứng dụng máy tính mới chạy, và lời nhắc sẽ đợi cửa sổ ra trước mới hiện.",
   "settings.cleanImages": "Tự dọn ảnh đã dán",
   "settings.cleanImagesHint":
     "Ảnh được dán hoặc thả vào terminal trước tiên được lưu thành tệp tạm (đường dẫn được gửi cho tác nhân). Khi bật, tệp tạm của phiên sẽ bị xóa lúc ứng dụng thoát và tệp còn sót quá 24 giờ được dọn khi khởi động. Ảnh trong tài liệu không bị ảnh hưởng.",
@@ -2189,6 +2192,12 @@ const vi: typeof en = {
   "chat.antigravity.textOnly": "Chế độ hội thoại của Antigravity hiện chỉ hỗ trợ tin nhắn văn bản.",
   "chat.antigravity.permissionsHint": "Các công cụ cần phê duyệt phải được cho phép trước trong cài đặt Antigravity hoặc sử dụng ở chế độ thiết bị đầu cuối.",
   "chat.antigravity.settingsHint": "Thay đổi mô hình, mức độ suy luận hoặc quyền giữa các lượt.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "Đã đến lúc uống nước",
+  "water.body": (seconds: number) =>
+    `Rời màn hình trong ${seconds} giây. Hộp thoại này không thể đóng hay bỏ qua — nó tự đóng khi hết đếm ngược.`,
+  "water.hint": "Terminal và agent vẫn chạy tiếp ở chế độ nền.",
 };
 
 export default vi;

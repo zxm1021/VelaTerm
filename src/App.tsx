@@ -12,6 +12,7 @@ import { SplitTaskConfirmModal } from "./components/SplitTaskConfirmModal";
 import { SpawnConfirmModal } from "./components/SpawnConfirmModal";
 import { UpdateModal } from "./components/UpdateModal";
 import { VelaSkillsModal } from "./components/VelaSkillsModal";
+import { WaterBreakModal } from "./components/WaterBreakModal";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useNotifications } from "./hooks/useNotifications";
 import { CenterPane } from "./layout/CenterPane/CenterPane";
@@ -50,6 +51,7 @@ import { startMirrorSync } from "./store/mirrorSync";
 import { useTermStore } from "./store/termStore";
 import { startUsageSync } from "./store/usageSync";
 import { watchSystemTheme } from "./theme";
+import { startWaterReminder } from "./water/waterReminder";
 
 // Full-screen surfaces driven entirely by query parameters. Each renders null until its parameter is
 // present, so importing them on demand keeps their code and dependencies out of the entry chunk.
@@ -196,6 +198,8 @@ function App() {
     // Account usage: read the machine-wide snapshot once, then follow the backend's broadcast. Sessions
     // render from this one copy instead of each querying its provider.
     const stopUsageSync = startUsageSync();
+    // Forced hydration breaks. No-ops on clients the break cannot run on; see the module's note.
+    const stopWaterReminder = startWaterReminder();
     // Authoritative session records: read the whole set once, then follow the broadcast. This is a
     // connection-level subscription, so a session this client has never opened still shows its state.
     void useTermStore.getState().syncSessionStates();
@@ -217,6 +221,7 @@ function App() {
       stopMirrorSync();
       stopSettingsWatch();
       stopUsageSync();
+      stopWaterReminder();
     };
     // Run once on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -285,6 +290,7 @@ function App() {
       <NotifyGuideModal />
       <UpdateModal />
       {!isShareSurface && <VelaSkillsModal />}
+      <WaterBreakModal />
       <ConnectionBanner />
       <ErrorLogModal />
       <NotificationsManager />

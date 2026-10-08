@@ -2,6 +2,8 @@
 
 ### Không gian làm việc
 
+- **Nhắc uống nước khóa ứng dụng trong 20 giây vào ngày thường.** Mặc định tắt; bật trong Cài đặt ▸ Hành vi. Từ thứ Hai đến thứ Sáu, ứng dụng chặn VelaTerm lúc 10:00, 11:00, 12:00 và sau đó từ 14:00 đến 19:00 — chín lần mỗi ngày, chừa trống khung giờ nghỉ trưa 12:00–14:00. Hộp thoại không có nút nào và không thể đóng: Esc, nhấp vào nền và các phím tắt toàn cục đều không có tác dụng, và nó chỉ tự đóng khi đồng hồ đếm ngược về không. Đây là khóa ở mức giao diện, không phải mức hệ thống — các nút cửa sổ của hệ điều hành, menu ứng dụng (⌘Q), ứng dụng khác và việc buộc thoát đều nằm ngoài tầm với của một tiến trình hiển thị. Lời nhắc đến hạn khi cửa sổ đang ở phía sau sẽ đợi bạn quay lại thay vì đếm ngược mà không ai thấy, và nó nhường chỗ cho hộp thoại đang mở thay vì chồng lên trên. Chỉ ứng dụng máy tính mới chạy; trình duyệt, máy khách từ xa và thiết bị di động bỏ qua cài đặt này.
+
 - **Trình xem thay đổi lấp đầy cửa sổ và hiển thị diff theo ba cách.** Trước đây nó mở dưới dạng một bảng nổi giới hạn ở 1040×720, lãng phí một khoảng lề ở mọi phía của thứ duy nhất mà bạn mở nó để đọc. Nay nó phủ toàn bộ cửa sổ, và ba điều khiển trên thanh tiêu đề quyết định cách so sánh: hiển thị nội dung nào (so sánh cả hai bên, hoặc chỉ tệp cũ hay tệp mới), giữ lại bao nhiêu ngữ cảnh không đổi quanh mỗi thay đổi (3 dòng, 20 dòng hoặc toàn bộ tệp), và so sánh được chia thành hai cột hay gộp thành một cột với các dòng bị xóa chèn ngay trên phần thay thế chúng. Nhấn `/` để chuyển giữa dạng chia cột và dạng gộp mà không rời bàn phím, nhấn Esc hoặc ⌘W để đóng — ⌘W đóng chính trình xem chứ không phải bảng phía sau nó, vốn là điều trước đây nó làm. Ba lựa chọn này được ghi nhớ cho lần mở sau.
 
 ### Thiết bị đầu cuối

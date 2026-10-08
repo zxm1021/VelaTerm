@@ -67,6 +67,7 @@ Controls that are switched off, and controls that do not fit beside the message 
 | Usage auto-refresh | Keep the account usage in the Info panel up to date (on by default) |
 | Usage refresh | Refresh interval: 30 s, 1 min, 2 min or 5 min (default 5 min) |
 | Continue after limit resets | Continue a Claude or Codex task automatically after a five-hour or weekly usage limit resets (on by default) |
+| Hydration breaks | On weekdays, lock VelaTerm for 20 seconds at 10:00, 11:00, 12:00 and then every hour from 14:00 to 19:00 (off by default). The dialog has no buttons and cannot be dismissed: Esc, a backdrop click and the global shortcuts all do nothing, and it closes itself only when the countdown reaches zero. A reminder that comes due while the window is in the background waits until you return instead of counting down unseen. Desktop app only — browser, remote and mobile clients ignore it |
 | Auto-clean pasted images | Remove the temporary files of pasted images when the app exits, and files older than 24 hours at startup (on by default). "Clean now" removes them immediately |
 
 **Session reference context** decides how `vrefer --ask` (and the `vask` skill) hands another session's conversation to the agent that answers. "Full transcript" (default) passes the whole conversation. "Summarize first" condenses it first with the "Summary agent", model and effort selected here. See [Session Commands](session-commands_20260925_1012.md) §5.

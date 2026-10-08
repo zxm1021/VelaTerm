@@ -81,6 +81,11 @@ export function useKeyboardShortcuts() {
     };
 
     const handler = (e: KeyboardEvent) => {
+      // The forced hydration break locks the client for its countdown. The dialog swallows keys that reach
+      // it, but this listener runs earlier in the capture phase and would otherwise still switch tabs, split
+      // panes, or close them behind the lock. Returning here leaves the event unconsumed so the dialog sees it.
+      if (useTermStore.getState().waterBreakOpen) return;
+
       // ── Fixed shortcut 1: Cmd+1–9 selects the nth tab ──
       const tabIdx = digitIndex(e);
       // Cmd/Ctrl+Alt+digit is left to editors, where the document editor maps it to heading levels.

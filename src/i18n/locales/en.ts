@@ -462,6 +462,9 @@ const en = {
   "settings.usageRefresh": "Usage refresh",
   "settings.autoContinue": "Continue after limit resets",
   "settings.autoContinueHint": "When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.",
+  "settings.waterReminder": "Hydration breaks",
+  "settings.waterReminderHint":
+    "On weekdays, locks VelaTerm for 20 seconds at 10:00–12:00 and 14:00–19:00, every hour. The dialog cannot be dismissed or skipped; only the desktop app runs it, and a reminder waits for the window to be in front before it appears.",
   "settings.cleanImages": "Auto-clean pasted images",
   "settings.cleanImagesHint":
     "Images pasted or dropped into the terminal are first saved as temp files (the path is sent to the agent). When on, this session's temp files are removed when the app exits, and leftovers older than 24h are cleared on startup. Images inside documents are never touched.",
@@ -2239,6 +2242,12 @@ const en = {
   "chat.antigravity.textOnly": "Antigravity conversation view currently supports text messages only.",
   "chat.antigravity.permissionsHint": "Tools that require approval must be allowed in Antigravity settings or used in terminal view.",
   "chat.antigravity.settingsHint": "Change the model, reasoning effort, or permissions between turns.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "Time to drink some water",
+  "water.body": (seconds: number) =>
+    `Step away for ${seconds} seconds. This dialog cannot be dismissed or skipped — it closes itself when the countdown ends.`,
+  "water.hint": "Your terminals and agents keep running in the background.",
 };
 
 export default en;

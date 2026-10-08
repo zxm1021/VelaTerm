@@ -1021,6 +1021,19 @@ interface TermStore {
   errorLogOpen: boolean;
   /** Whether the cross-platform Git clone dialog is open. */
   cloneModalOpen: boolean;
+  /** Whether the forced hydration break is on screen. Owned by the reminder scheduler, which must know
+   * whether a dialog is already up before it counts a due reminder as shown. */
+  waterBreakOpen: boolean;
+  /**
+   * Show the forced hydration break, and report whether it appeared.
+   *
+   * Refuses — returning false without changing anything — while the window is unfocused or another
+   * dialog owns the screen. The caller keeps the reminder pending in that case, so this is a deliberate
+   * refusal rather than a silent no-op; showing a modal over another modal would strand one of them.
+   */
+  openWaterBreak: () => boolean;
+  /** Dismiss the forced hydration break. Only the countdown in `WaterBreakModal` reaches this. */
+  closeWaterBreak: () => void;
   /** Browser-mode Save As request. `DocView` creates it and `SaveAsModal` resolves the selected path. */
   saveAsRequest: {
     defaultName: string;
@@ -1100,6 +1113,8 @@ interface TermStore {
   usageRefreshSec: number;
   /** Whether conversations stopped by a usage limit continue on their own once it resets. */
   autoContinueAtUsageLimit: boolean;
+  /** Whether the forced hydration break runs. Off by default; desktop clients only, see src/water. */
+  waterReminder: boolean;
   /** The backend's one account-usage copy, filled by `usage://changed` and read by the Info panel.
    * Null until the first read returns; sessions never query providers themselves. */
   usage: UsageSnapshot | null;
@@ -1538,6 +1553,8 @@ interface TermStore {
   setUsageRefreshSec: (v: number) => void;
   /** Turns automatic continuation after a usage limit resets on or off. */
   setAutoContinueAtUsageLimit: (v: boolean) => void;
+  /** Enables or disables the forced hydration break. */
+  setWaterReminder: (v: boolean) => void;
   /** Stores a usage snapshot received from the backend. */
   setUsage: (snap: UsageSnapshot) => void;
   /** Sets the persisted terminal renderer for new terminals. */
@@ -1747,6 +1764,7 @@ function persistAndApplyVisual(getState: () => TermStore) {
     infoCollapsed: s.infoCollapsed,
     composerInlineChips: s.composerInlineChips,
     composerInlineChipsRevision: s.composerInlineChipsRevision,
+    waterReminder: s.waterReminder,
   };
   saveSettings(ps);
   applyVisual(visualOf(ps));
@@ -2022,6 +2040,7 @@ export const useTermStore = create<TermStore>((set, get) => ({
   shareOpen: false,
   errorLogOpen: false,
   cloneModalOpen: false,
+  waterBreakOpen: false,
   saveAsRequest: null,
   leftWidth: 240,
   rightWidth: 280,
@@ -2624,6 +2643,22 @@ export const useTermStore = create<TermStore>((set, get) => ({
   setGlobalSearchOpen: (open) => {
     set({ globalSearchOpen: open });
   },
+
+  openWaterBreak: () => {
+    const s = get();
+    // Unfocused: the user cannot see the break, and its countdown would burn unwatched.
+    if (!s.windowFocused) return false;
+    if (s.waterBreakOpen) return true;
+    // Another dialog owns the screen. Stacking on top would strand whichever one is dismissed second, so
+    // the reminder stays pending instead; the scheduler retries once that dialog closes.
+    if (s.settingsOpen || s.shareOpen || s.errorLogOpen || s.cloneModalOpen || s.notifyGuideOpen) {
+      return false;
+    }
+    set({ waterBreakOpen: true });
+    return true;
+  },
+
+  closeWaterBreak: () => set({ waterBreakOpen: false }),
 
   moveNode: async (
     kind,
@@ -4725,6 +4760,10 @@ export const useTermStore = create<TermStore>((set, get) => ({
   },
   setUsageAutoRefresh: (v) => {
     set({ usageAutoRefresh: v });
+    persistAndApplyVisual(get);
+  },
+  setWaterReminder: (v) => {
+    set({ waterReminder: v });
     persistAndApplyVisual(get);
   },
   // The backend poller floors the interval at 30 s, so clamp here too rather than storing a value it

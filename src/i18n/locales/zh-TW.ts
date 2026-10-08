@@ -460,6 +460,9 @@ const zhTW: typeof en = {
   "settings.usageRefresh": "額度刷新", // Usage refresh
   "settings.autoContinue": "額度重設後自動繼續", // Continue after limit resets
   "settings.autoContinueHint": "Claude 或 Codex 因 5 小時或每週用量上限中斷時，額度重設後自動繼續執行任務。", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "喝水提醒",
+  "settings.waterReminderHint":
+    "工作日 10:00–12:00 與 14:00–19:00 每小時鎖定 20 秒。彈窗無法關閉或跳過；僅桌面端生效，視窗不在前景時會等回到前景再顯示。",
   "settings.cleanImages": "自動清理貼上的圖片",
   "settings.cleanImagesHint":
     "貼上或拖入終端的圖片會先存成暫存檔（把路徑傳給 agent）。開啟後：結束時刪除本次會話產生的這些暫存圖，啟動時清理超過 24 小時的殘留。文件內的圖片不受影響。",
@@ -2179,6 +2182,12 @@ const zhTW: typeof en = {
   "chat.antigravity.textOnly": "Antigravity 會話檢視目前僅支援文字訊息。",
   "chat.antigravity.permissionsHint": "需要核准的工具必須先在 Antigravity 設定中獲准使用，或在終端機檢視中使用。",
   "chat.antigravity.settingsHint": "請在回合之間變更模型、思考程度或權限。",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "該喝水了",
+  "water.body": (seconds: number) =>
+    `離開螢幕 ${seconds} 秒。此彈窗無法關閉或跳過，倒數結束後自動消失。`,
+  "water.hint": "終端機和智慧體會繼續在背景執行。",
 };
 
 export default zhTW;

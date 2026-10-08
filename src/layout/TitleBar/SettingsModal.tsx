@@ -338,6 +338,8 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
   const setUsageRefreshSec = useTermStore((s) => s.setUsageRefreshSec);
   const autoContinueAtUsageLimit = useTermStore((s) => s.autoContinueAtUsageLimit);
   const setAutoContinueAtUsageLimit = useTermStore((s) => s.setAutoContinueAtUsageLimit);
+  const waterReminder = useTermStore((s) => s.waterReminder);
+  const setWaterReminder = useTermStore((s) => s.setWaterReminder);
   const soundEnabled = useTermStore((s) => s.soundEnabled);
   const toggleSound = useTermStore((s) => s.toggleSound);
   const uiFontFamily = useTermStore((s) => s.uiFontFamily);
@@ -785,6 +787,27 @@ export function SettingsModal({ onClose }: { onClose: () => void }) {
                     }}
                   >
                     {t("settings.autoContinueHint")}
+                  </div>
+                  <Field label={t("settings.waterReminder")}>
+                    <Seg<"on" | "off">
+                      value={waterReminder ? "on" : "off"}
+                      options={[
+                        ["on", t("common.on")],
+                        ["off", t("common.off")],
+                      ]}
+                      onChange={(v) => setWaterReminder(v === "on")}
+                    />
+                  </Field>
+                  <div
+                    style={{
+                      marginTop: 4,
+                      marginBottom: 8,
+                      fontSize: 11,
+                      lineHeight: 1.5,
+                      color: "var(--text-dim)",
+                    }}
+                  >
+                    {t("settings.waterReminderHint")}
                   </div>
                   <CleanImagesField />
                 </div>

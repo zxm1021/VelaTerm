@@ -464,6 +464,9 @@ const fr: typeof en = {
   "settings.usageRefresh": "Usage refresh", // Usage refresh
   "settings.autoContinue": "Reprendre après réinitialisation", // Continue after limit resets
   "settings.autoContinueHint": "Lorsqu’une limite d’utilisation de 5 heures ou hebdomadaire interrompt Claude ou Codex, la tâche reprend automatiquement après la réinitialisation de la limite.", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "Pauses hydratation",
+  "settings.waterReminderHint":
+    "En semaine, verrouille VelaTerm pendant 20 secondes à 10:00–12:00 et 14:00–19:00, toutes les heures. La fenêtre ne peut être ni fermée ni ignorée ; seule l’application de bureau l’applique, et un rappel attend que la fenêtre soit au premier plan pour s’afficher.",
   "settings.cleanImages": "Nettoyer automatiquement les images collées",
   "settings.cleanImagesHint":
     "Les images collées ou déposées dans le terminal sont d'abord enregistrées comme fichiers temporaires (le chemin est envoyé à l'agent). Si activé, les fichiers temporaires de cette session sont supprimés à la fermeture, et les restes de plus de 24 h sont nettoyés au démarrage. Les images des documents ne sont jamais touchées.",
@@ -2245,6 +2248,12 @@ const fr: typeof en = {
   "chat.antigravity.textOnly": "La vue de conversation d’Antigravity ne prend actuellement en charge que les messages texte.",
   "chat.antigravity.permissionsHint": "Les outils nécessitant une autorisation doivent être autorisés dans les paramètres d’Antigravity ou utilisés dans la vue terminal.",
   "chat.antigravity.settingsHint": "Modifiez le modèle, le niveau de raisonnement ou les autorisations entre les tours.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "Il est temps de boire de l’eau",
+  "water.body": (seconds: number) =>
+    `Éloignez-vous de l’écran pendant ${seconds} secondes. Cette fenêtre ne peut être ni fermée ni ignorée — elle se ferme d’elle-même à la fin du compte à rebours.`,
+  "water.hint": "Vos terminaux et vos agents continuent de tourner en arrière-plan.",
 };
 
 export default fr;

@@ -464,6 +464,9 @@ const es: typeof en = {
   "settings.usageRefresh": "Usage refresh", // Usage refresh
   "settings.autoContinue": "Continuar tras el restablecimiento", // Continue after limit resets
   "settings.autoContinueHint": "Cuando un límite de uso de 5 horas o semanal detiene a Claude o Codex, la tarea continúa automáticamente después de que se restablezca el límite.", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "Pausas de hidratación",
+  "settings.waterReminderHint":
+    "Entre semana, bloquea VelaTerm durante 20 segundos a las 10:00–12:00 y 14:00–19:00, cada hora. El diálogo no se puede cerrar ni omitir; solo lo ejecuta la app de escritorio, y un recordatorio espera a que la ventana esté en primer plano para aparecer.",
   "settings.cleanImages": "Limpiar imágenes pegadas automáticamente",
   "settings.cleanImagesHint":
     "Las imágenes pegadas o arrastradas a la terminal se guardan primero como archivos temporales (la ruta se envía al agente). Si está activado, los archivos temporales de esta sesión se eliminan al salir, y los restos de más de 24 h se limpian al iniciar. Las imágenes de los documentos no se tocan.",
@@ -2242,6 +2245,12 @@ const es: typeof en = {
   "chat.antigravity.textOnly": "La vista de conversación de Antigravity actualmente solo admite mensajes de texto.",
   "chat.antigravity.permissionsHint": "Las herramientas que requieren aprobación deben autorizarse previamente en la configuración de Antigravity o utilizarse en la vista de terminal.",
   "chat.antigravity.settingsHint": "Cambie el modelo, el nivel de razonamiento o los permisos entre turnos.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "Es hora de beber agua",
+  "water.body": (seconds: number) =>
+    `Aléjate de la pantalla durante ${seconds} segundos. Este diálogo no se puede cerrar ni omitir: se cierra solo cuando termina la cuenta atrás.`,
+  "water.hint": "Tus terminales y agentes siguen funcionando en segundo plano.",
 };
 
 export default es;

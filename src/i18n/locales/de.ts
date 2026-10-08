@@ -463,6 +463,9 @@ const de: typeof en = {
   "settings.usageRefresh": "Usage refresh", // Usage refresh
   "settings.autoContinue": "Nach Zurücksetzung fortsetzen", // Continue after limit resets
   "settings.autoContinueHint": "Wenn ein 5-Stunden- oder Wochen-Nutzungslimit Claude oder Codex unterbricht, wird die Aufgabe nach der Zurücksetzung des Limits automatisch fortgesetzt.", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "Trinkpausen",
+  "settings.waterReminderHint":
+    "Sperrt VelaTerm an Werktagen um 10:00–12:00 und 14:00–19:00 stündlich für 20 Sekunden. Der Dialog lässt sich weder schließen noch überspringen; nur die Desktop-App führt ihn aus, und eine Erinnerung wartet, bis das Fenster im Vordergrund ist.",
   "settings.cleanImages": "Eingefügte Bilder automatisch bereinigen",
   "settings.cleanImagesHint":
     "In das Terminal eingefügte oder gezogene Bilder werden zunächst als temporäre Dateien gespeichert (der Pfad wird an den Agenten gesendet). Wenn aktiviert, werden die temporären Dateien dieser Sitzung beim Beenden gelöscht und Reste, die älter als 24 Std. sind, beim Start entfernt. Bilder in Dokumenten bleiben unberührt.",
@@ -2234,6 +2237,12 @@ const de: typeof en = {
   "chat.antigravity.textOnly": "Die Konversationsansicht von Antigravity unterstützt derzeit nur Textnachrichten.",
   "chat.antigravity.permissionsHint": "Werkzeuge, die eine Genehmigung erfordern, müssen in den Antigravity-Einstellungen freigegeben oder in der Terminalansicht verwendet werden.",
   "chat.antigravity.settingsHint": "Ändern Sie Modell, Denkaufwand oder Berechtigungen zwischen den Gesprächsrunden.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "Zeit, Wasser zu trinken",
+  "water.body": (seconds: number) =>
+    `Tritt ${seconds} Sekunden vom Bildschirm weg. Dieser Dialog lässt sich weder schließen noch überspringen – er schließt sich selbst, wenn der Countdown endet.`,
+  "water.hint": "Deine Terminals und Agenten laufen im Hintergrund weiter.",
 };
 
 export default de;

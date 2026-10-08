@@ -464,6 +464,9 @@ const ptBR: typeof en = {
   "settings.usageRefresh": "Usage refresh", // Usage refresh
   "settings.autoContinue": "Continuar após a redefinição", // Continue after limit resets
   "settings.autoContinueHint": "Quando um limite de uso de 5 horas ou semanal interrompe o Claude ou o Codex, a tarefa continua automaticamente após a redefinição do limite.", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "Pausas para hidratação",
+  "settings.waterReminderHint":
+    "Em dias úteis, bloqueia o VelaTerm por 20 segundos às 10:00–12:00 e 14:00–19:00, a cada hora. A caixa de diálogo não pode ser fechada nem ignorada; somente o aplicativo de desktop a executa, e um lembrete espera a janela ficar em primeiro plano para aparecer.",
   "settings.cleanImages": "Limpar imagens coladas automaticamente",
   "settings.cleanImagesHint":
     "Imagens coladas ou arrastadas para o terminal são salvas primeiro como arquivos temporários (o caminho é enviado ao agente). Quando ativado, os arquivos temporários desta sessão são removidos ao sair, e sobras com mais de 24 h são limpas na inicialização. Imagens dentro de documentos não são afetadas.",
@@ -2239,6 +2242,12 @@ const ptBR: typeof en = {
   "chat.antigravity.textOnly": "A visualização de conversa do Antigravity atualmente aceita apenas mensagens de texto.",
   "chat.antigravity.permissionsHint": "Ferramentas que exigem aprovação devem ser autorizadas nas configurações do Antigravity ou usadas na visualização de terminal.",
   "chat.antigravity.settingsHint": "Altere o modelo, o nível de raciocínio ou as permissões entre os turnos.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "Hora de beber água",
+  "water.body": (seconds: number) =>
+    `Afaste-se da tela por ${seconds} segundos. Esta caixa de diálogo não pode ser fechada nem ignorada — ela se fecha sozinha quando a contagem termina.`,
+  "water.hint": "Seus terminais e agentes continuam rodando em segundo plano.",
 };
 
 export default ptBR;

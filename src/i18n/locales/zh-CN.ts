@@ -459,6 +459,9 @@ const zhCN: typeof en = {
   "settings.usageRefresh": "额度刷新",
   "settings.autoContinue": "额度重置后自动继续",
   "settings.autoContinueHint": "Claude 或 Codex 因 5 小时或每周用量上限中断时，额度重置后自动继续执行任务。",
+  "settings.waterReminder": "喝水提醒",
+  "settings.waterReminderHint":
+    "工作日 10:00–12:00 与 14:00–19:00 每小时锁屏 20 秒。弹窗无法关闭或跳过；仅桌面端生效，窗口不在前台时会等回到前台再弹。",
   "settings.cleanImages": "自动清理粘贴图片",
   "settings.cleanImagesHint":
     "粘贴或拖入终端的图片会先存成临时文件（把路径发给 agent）。开启后：退出时删除本次会话产生的这些临时图，启动时清理超过 24 小时的残留。文档里的图片不受影响。",
@@ -2178,6 +2181,12 @@ const zhCN: typeof en = {
   "chat.antigravity.textOnly": "Antigravity 会话视图目前仅支持文本消息。",
   "chat.antigravity.permissionsHint": "需要批准的工具必须先在 Antigravity 设置中获准使用，或在终端视图中使用。",
   "chat.antigravity.settingsHint": "请在回合之间修改模型、推理强度或权限。",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "该喝水了",
+  "water.body": (seconds: number) =>
+    `离开屏幕 ${seconds} 秒。此弹窗无法关闭或跳过，倒计时结束后自动消失。`,
+  "water.hint": "终端和智能体会继续在后台运行。",
 };
 
 export default zhCN;

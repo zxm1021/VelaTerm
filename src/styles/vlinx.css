@@ -660,5 +660,15 @@ svg { display: block; }
 .quit-btn.primary:hover { filter: brightness(1.06); }
 .quit-btn:disabled { opacity: .6; cursor: default; filter: none; }
 
+/* Forced hydration break. Deliberately has no footer, no buttons and no close affordance: the only way
+   out is the countdown. The ring is the countdown's own progress, drawn in SVG by WaterBreakModal. */
+.water-card { width: 340px; max-width: 92vw; padding: 26px 24px 22px; display: flex; flex-direction: column; align-items: center; text-align: center; background: var(--bg-2); border: 1px solid var(--border-strong); border-radius: var(--r-lg); box-shadow: var(--shadow); outline: none; }
+.water-ring { position: relative; width: 108px; height: 108px; display: grid; place-items: center; }
+.water-ring svg { position: absolute; inset: 0; }
+.water-count { font-size: 34px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.water-title { margin-top: 16px; font-size: 14px; font-weight: 600; color: var(--text); }
+.water-body { margin-top: 8px; font-size: 12.5px; line-height: 1.65; color: var(--text-dim); }
+.water-hint { margin-top: 14px; font-size: 11px; line-height: 1.5; color: var(--text-dim); opacity: .75; }
+
 .sidebar-tree-error { display: flex; align-items: flex-start; gap: var(--space-2, 8px); margin: var(--space-2, 8px); padding: var(--space-2, 8px); border: 1px solid var(--status-error); border-radius: var(--r-sm); color: var(--status-error); font-size: 12px; }
 .sidebar-tree-error span { flex: 1; min-width: 0; overflow-wrap: anywhere; }

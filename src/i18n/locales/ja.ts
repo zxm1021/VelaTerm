@@ -463,6 +463,9 @@ const ja: typeof en = {
   "settings.usageRefresh": "Usage refresh", // Usage refresh
   "settings.autoContinue": "上限リセット後に自動再開", // Continue after limit resets
   "settings.autoContinueHint": "Claude または Codex が 5 時間または週間の利用上限で停止した場合、上限のリセット後にタスクを自動的に再開します。", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "水分補給リマインダー",
+  "settings.waterReminderHint":
+    "平日の 10:00〜12:00 と 14:00〜19:00 に 1 時間ごとに 20 秒間 VelaTerm をロックします。ダイアログは閉じることもスキップすることもできません。デスクトップ版のみで動作し、ウィンドウが前面にない場合は前面に戻るまで待機します。",
   "settings.cleanImages": "貼り付け画像の自動クリーンアップ",
   "settings.cleanImagesHint":
     "ターミナルに貼り付け／ドロップした画像は、まず一時ファイルとして保存されます（パスがエージェントに渡されます）。オンにすると、このセッションの一時ファイルは終了時に削除され、24 時間以上前の残りは起動時に整理されます。ドキュメント内の画像には影響しません。",
@@ -2228,6 +2231,12 @@ const ja: typeof en = {
   "chat.antigravity.textOnly": "Antigravity の会話ビューは現在、テキストメッセージのみに対応しています。",
   "chat.antigravity.permissionsHint": "承認が必要なツールは、Antigravity の設定で事前に許可するか、ターミナルビューで使用してください。",
   "chat.antigravity.settingsHint": "モデル、推論の強度、権限はターンの合間に変更してください。",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "水分補給の時間です",
+  "water.body": (seconds: number) =>
+    `画面から ${seconds} 秒離れてください。このダイアログは閉じることもスキップすることもできず、カウントダウンが終わると自動的に消えます。`,
+  "water.hint": "ターミナルとエージェントはバックグラウンドで動き続けます。",
 };
 
 export default ja;

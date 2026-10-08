@@ -473,6 +473,9 @@ const ru: typeof en = {
   "settings.usageRefresh": "Usage refresh", // Usage refresh
   "settings.autoContinue": "Продолжать после сброса лимита", // Continue after limit resets
   "settings.autoContinueHint": "Если Claude или Codex останавливается из-за 5-часового или недельного лимита использования, задача автоматически продолжится после сброса лимита.", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "Перерывы на воду",
+  "settings.waterReminderHint":
+    "По будням блокирует VelaTerm на 20 секунд в 10:00–12:00 и 14:00–19:00 каждый час. Диалог нельзя закрыть или пропустить; он работает только в настольном приложении, а напоминание ждёт, пока окно окажется на переднем плане.",
   "settings.cleanImages": "Автоочистка вставленных изображений",
   "settings.cleanImagesHint":
     "Изображения, вставленные или перетащенные в терминал, сначала сохраняются во временные файлы (путь передаётся агенту). Если включено, временные файлы этого сеанса удаляются при выходе, а остатки старше 24 ч очищаются при запуске. Изображения внутри документов не затрагиваются.",
@@ -2251,6 +2254,12 @@ const ru: typeof en = {
   "chat.antigravity.textOnly": "В режиме диалога Antigravity пока поддерживаются только текстовые сообщения.",
   "chat.antigravity.permissionsHint": "Инструменты, требующие одобрения, необходимо заранее разрешить в настройках Antigravity или использовать в режиме терминала.",
   "chat.antigravity.settingsHint": "Изменяйте модель, уровень рассуждений или разрешения между ходами.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "Пора выпить воды",
+  "water.body": (seconds: number) =>
+    `Отойдите от экрана на ${seconds} секунд. Этот диалог нельзя закрыть или пропустить — он закроется сам, когда закончится отсчёт.`,
+  "water.hint": "Терминалы и агенты продолжают работать в фоне.",
 };
 
 export default ru;

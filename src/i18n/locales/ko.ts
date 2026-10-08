@@ -463,6 +463,9 @@ const ko: typeof en = {
   "settings.usageRefresh": "Usage refresh", // Usage refresh
   "settings.autoContinue": "한도 초기화 후 자동으로 계속", // Continue after limit resets
   "settings.autoContinueHint": "Claude 또는 Codex가 5시간 또는 주간 사용 한도로 중단되면 한도가 초기화된 후 작업을 자동으로 계속합니다.", // When a 5-hour or weekly usage limit stops Claude or Codex, the task continues automatically after the limit resets.
+  "settings.waterReminder": "수분 섭취 알림",
+  "settings.waterReminderHint":
+    "평일 10:00–12:00, 14:00–19:00에 매시간 20초 동안 VelaTerm을 잠급니다. 이 대화상자는 닫거나 건너뛸 수 없습니다. 데스크톱 앱에서만 동작하며, 창이 앞에 없으면 앞으로 나올 때까지 기다립니다.",
   "settings.cleanImages": "붙여넣은 이미지 자동 정리",
   "settings.cleanImagesHint":
     "터미널에 붙여넣거나 끌어다 놓은 이미지는 먼저 임시 파일로 저장됩니다(경로가 에이전트에 전달됩니다). 켜면 이 세션의 임시 파일은 종료 시 삭제되고, 24시간이 지난 잔여 파일은 시작 시 정리됩니다. 문서 안의 이미지는 영향을 받지 않습니다.",
@@ -2211,6 +2214,12 @@ const ko: typeof en = {
   "chat.antigravity.textOnly": "Antigravity 대화 보기는 현재 텍스트 메시지만 지원합니다.",
   "chat.antigravity.permissionsHint": "승인이 필요한 도구는 Antigravity 설정에서 미리 허용하거나 터미널 보기에서 사용해야 합니다.",
   "chat.antigravity.settingsHint": "모델, 추론 강도 또는 권한은 턴 사이에 변경하세요.",
+
+  // Forced hydration break dialog. "water.body" receives the break length in seconds.
+  "water.title": "물을 마실 시간입니다",
+  "water.body": (seconds: number) =>
+    `화면에서 ${seconds}초 동안 벗어나세요. 이 대화상자는 닫거나 건너뛸 수 없으며, 카운트다운이 끝나면 자동으로 사라집니다.`,
+  "water.hint": "터미널과 에이전트는 백그라운드에서 계속 실행됩니다.",
 };
 
 export default ko;

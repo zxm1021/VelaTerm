@@ -184,6 +184,9 @@ export interface PersistedSettings {
   /** Whether a Claude or Codex conversation stopped by a five-hour or weekly usage limit continues on its own
    * once the limit resets. The backend scheduler reads this key from the shared settings block. */
   autoContinueAtUsageLimit: boolean;
+  /** Whether the forced hydration break runs. Off by default: it locks the whole client for 20 seconds, so
+   * it is opted into rather than sprung on someone. Desktop clients only; see src/water/waterReminder.ts. */
+  waterReminder: boolean;
   /** Image paste mode: upload writes a file path, while agent lets the agent read the clipboard and show
    * `[Image #x]`. Configurable only on local desktop clients; browser and remote clients always upload. */
   imagePasteMode: ImagePasteMode;
@@ -290,6 +293,7 @@ const SETTINGS_DEFAULTS: PersistedSettings = {
   usageAutoRefresh: true,
   usageRefreshSec: 300,
   autoContinueAtUsageLimit: true,
+  waterReminder: false,
   imagePasteMode: "upload",
   chatModel: "",
   chatModelByKind: {},
@@ -398,6 +402,8 @@ export function loadSettings(): PersistedSettings {
     merged.referSummary = sanitizeReferSummary(parsed.referSummary);
     merged.composerInlineChips = sanitizeComposerInlineChips(parsed.composerInlineChips);
     merged.inputLatencyLog = merged.inputLatencyLog === true;
+    // Opt-in only: a truthy non-boolean from a corrupted payload must not arm a dialog that locks the client.
+    merged.waterReminder = merged.waterReminder === true;
     merged.inputLatencyThresholdMs = normalizeInputLatencyThreshold(merged.inputLatencyThresholdMs);
     // A list saved before revision 1 gains Tasks at the end. The bumped revision is written with the next
     // save, so switching Tasks off again afterwards is kept.
