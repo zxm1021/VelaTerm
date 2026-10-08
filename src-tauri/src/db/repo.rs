@@ -71,6 +71,8 @@ fn map_project(row: &Row) -> rusqlite::Result<Project> {
         // Append the emoji marker at index 7 without shifting existing fields.
         mark: row.get(7)?,
         collection_id: row.get(8)?,
+        // Append the per-project shortcut buttons JSON at index 9.
+        shortcut_buttons: row.get(9)?,
     })
 }
 
@@ -154,7 +156,8 @@ pub fn import_project(conn: &Connection, root_path: &str) -> Result<Project, Str
     // root before comparison so the CLI switches to the project instead of importing a duplicate.
     let mut stmt = conn
         .prepare(
-            "SELECT id, name, root_path, color, sort_order, collapsed, created_at, mark, collection_id FROM projects",
+            "SELECT id, name, root_path, color, sort_order, collapsed, created_at, mark, collection_id, \
+             shortcut_buttons FROM projects",
         )
         .map_err(|e| format!("Failed to inspect existing projects: {e}"))?;
     let existing = stmt
@@ -183,6 +186,7 @@ pub fn import_project(conn: &Connection, root_path: &str) -> Result<Project, Str
         collapsed: false,
         mark: None,
         collection_id: None,
+        shortcut_buttons: None,
         created_at: now_secs(),
     };
 
@@ -225,6 +229,7 @@ pub fn create_virtual_project(conn: &Connection, name: &str) -> Result<Project, 
         collapsed: false,
         mark: None,
         collection_id: None,
+        shortcut_buttons: None,
         created_at: now_secs(),
     };
 
@@ -1699,6 +1704,27 @@ pub fn set_node_mark(
     Ok(())
 }
 
+/// Persist a project's shortcut buttons as a JSON array string; None or empty clears the column.
+pub fn set_project_shortcut_buttons(
+    conn: &Connection,
+    project_id: &str,
+    buttons: Option<&str>,
+) -> Result<(), String> {
+    let value = buttons.map(str::trim).filter(|s| !s.is_empty());
+    let changed = conn
+        .execute(
+            "UPDATE projects SET shortcut_buttons = ?1 WHERE id = ?2 AND deleted_at IS NULL",
+            params![value, project_id],
+        )
+        .map_err(|e| format!("Failed to update shortcut buttons: {e}"))?;
+    // A missing project means the caller acted on a row that was deleted meanwhile; say so rather than
+    // reporting success for a write that touched nothing.
+    if changed == 0 {
+        return Err(format!("Project not found: {project_id}"));
+    }
+    Ok(())
+}
+
 /// Bind an existing group to a worktree directory, or re-point it at a different one. Only the group
 /// row changes: sessions already in the group keep the working directory they were created with, while
 /// sessions created afterwards inherit this binding. Passing None for both columns clears the binding.
@@ -2376,7 +2402,8 @@ pub fn list_tree(conn: &Connection) -> Result<Tree, String> {
     // Exclude hidden deleted_at tombstones retained only because they contain archived sessions.
     let projects = query_all(
         conn,
-        "SELECT id, name, root_path, color, sort_order, collapsed, created_at, mark, collection_id
+        "SELECT id, name, root_path, color, sort_order, collapsed, created_at, mark, collection_id, \
+         shortcut_buttons
          FROM projects WHERE deleted_at IS NULL ORDER BY sort_order",
         map_project,
     )?;

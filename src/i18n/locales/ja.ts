@@ -369,6 +369,40 @@ const ja: typeof en = {
   "titlebar.clientSince": (time: string) => `${time} から`, // since {time}
   "titlebar.feedback": "フィードバック", // Feedback
   "titlebar.share": "共有", // Share
+  // ── Shortcut buttons (title bar) ──
+  "shortcut.edit": "ショートカットボタンを編集", // Edit shortcut buttons
+  "shortcut.editProject": (name) => `ショートカットボタン · ${name}`, // Shortcut buttons · {name}
+  "shortcut.scopeGlobal": "全体", // Global
+  "shortcut.scopeProject": "プロジェクト", // Project
+  "shortcut.globalHint": "すべてのプロジェクトに表示されます。", // Shown in every project.
+  "shortcut.projectHint": "このプロジェクトにのみ表示されます。", // Shown only for this project.
+  "shortcut.emptyGlobal": "全体ボタンはまだありません。", // No global buttons yet.
+  "shortcut.emptyProject": "このプロジェクトにはまだボタンがありません。", // No buttons for this project yet.
+  "shortcut.add": "追加", // Add
+  "shortcut.title": "タイトル", // Title
+  "shortcut.type": "動作", // Action
+  "shortcut.typeUrl": "URL", // URL
+  "shortcut.typeApp": "アプリ", // App
+  "shortcut.typeBash": "Bash", // Bash
+  "shortcut.valueUrl": "https://…", // https://…
+  "shortcut.valueApp": "/Applications/….app", // /Applications/….app
+  "shortcut.valueBash": "コマンドライン", // Command line
+  "shortcut.moveUp": "上へ", // Move up
+  "shortcut.moveDown": "下へ", // Move down
+  "shortcut.remove": "削除", // Remove
+  "shortcut.save": "保存", // Save
+  "shortcut.cancel": "キャンセル", // Cancel
+  "shortcut.limitProject": (max) => `プロジェクトごとに最大 ${max} 個です。`, // Up to {max} buttons per project.
+  "shortcut.bashWarn": "Bash ボタンはプロジェクトのディレクトリで実行されます。", // Bash buttons run in the project directory.
+  "shortcut.errBadUrl": "http:// または https:// で始まるアドレスを入力してください。", // Enter an http:// or https:// address.
+  "shortcut.errOpenUrl": (title) => `「${title}」のアドレスを開けませんでした。`, // Could not open the address for "{title}".
+  "shortcut.errOpenApp": (path) => `${path} を開けませんでした。`, // Could not open {path}.
+  "shortcut.errNoProject": "このプロジェクトには実行できるディレクトリがありません。", // This project has no directory to run in.
+  "shortcut.errCommand": (message) => `コマンドが失敗しました：${message}`, // Command failed: {message}
+  "shortcut.errCommandExit": (code, detail) =>
+    detail ? `終了コード ${code}：${detail}` : `終了コード ${code}。`, // Exited with code {code}: {detail}
+  "shortcut.errNoDirectory": "このプロジェクトのディレクトリがありません。", // This project's directory is missing.
+  "shortcut.errCommandTimeout": (seconds) => `コマンドは ${seconds} 秒を過ぎても終わらなかったため、停止しました。`, // The command was still running after {seconds} seconds and was stopped.
   // ── Alt-triggered menu bar (Windows/Linux) ──
   "menubar.file": "ファイル", // File
   "menubar.terminal": "ターミナル", // Terminal

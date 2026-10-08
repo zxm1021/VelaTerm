@@ -305,7 +305,7 @@ impl ShellRun {
 ///
 /// Unix shells get login semantics like the PTY does, so profiles fill `PATH` and tools such as `az`
 /// resolve. Windows chooses by shell family.
-fn shell_args(shell: &str, command: &str) -> Vec<String> {
+pub(crate) fn shell_args(shell: &str, command: &str) -> Vec<String> {
     use crate::agent::inject::{shell_kind, ShellKind};
     if cfg!(windows) {
         match shell_kind(shell) {

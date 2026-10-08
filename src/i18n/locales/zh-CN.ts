@@ -368,6 +368,40 @@ const zhCN: typeof en = {
   "titlebar.clientSince": (time: string) => `${time} 起`, // since {time}
   "titlebar.feedback": "反馈", // Feedback
   "titlebar.share": "分享", // Share
+  // ── Shortcut buttons (title bar) ──
+  "shortcut.edit": "编辑快捷按钮", // Edit shortcut buttons
+  "shortcut.editProject": (name) => `快捷按钮 · ${name}`, // Shortcut buttons · {name}
+  "shortcut.scopeGlobal": "全局", // Global
+  "shortcut.scopeProject": "项目", // Project
+  "shortcut.globalHint": "在所有项目中都会显示。", // Shown in every project.
+  "shortcut.projectHint": "只在当前项目中显示。", // Shown only for this project.
+  "shortcut.emptyGlobal": "还没有全局按钮。", // No global buttons yet.
+  "shortcut.emptyProject": "这个项目还没有按钮。", // No buttons for this project yet.
+  "shortcut.add": "添加", // Add
+  "shortcut.title": "标题", // Title
+  "shortcut.type": "动作", // Action
+  "shortcut.typeUrl": "URL", // URL
+  "shortcut.typeApp": "应用", // App
+  "shortcut.typeBash": "Bash", // Bash
+  "shortcut.valueUrl": "https://…", // https://…
+  "shortcut.valueApp": "/Applications/….app", // /Applications/….app
+  "shortcut.valueBash": "命令行", // Command line
+  "shortcut.moveUp": "上移", // Move up
+  "shortcut.moveDown": "下移", // Move down
+  "shortcut.remove": "删除", // Remove
+  "shortcut.save": "保存", // Save
+  "shortcut.cancel": "取消", // Cancel
+  "shortcut.limitProject": (max) => `每个项目最多 ${max} 个按钮。`, // Up to {max} buttons per project.
+  "shortcut.bashWarn": "Bash 按钮会在项目目录中执行。", // Bash buttons run in the project directory.
+  "shortcut.errBadUrl": "请填写 http:// 或 https:// 开头的地址。", // Enter an http:// or https:// address.
+  "shortcut.errOpenUrl": (title) => `无法打开「${title}」的地址。`, // Could not open the address for "{title}".
+  "shortcut.errOpenApp": (path) => `无法打开 ${path}。`, // Could not open {path}.
+  "shortcut.errNoProject": "该项目没有可执行的目录。", // This project has no directory to run in.
+  "shortcut.errCommand": (message) => `命令执行失败：${message}`, // Command failed: {message}
+  "shortcut.errCommandExit": (code, detail) =>
+    detail ? `退出码 ${code}：${detail}` : `退出码 ${code}。`, // Exited with code {code}: {detail}
+  "shortcut.errNoDirectory": "该项目的目录不存在。", // This project's directory is missing.
+  "shortcut.errCommandTimeout": (seconds) => `命令运行超过 ${seconds} 秒仍未结束，已被终止。`, // The command was still running after {seconds} seconds and was stopped.
   // ── Alt-triggered menu bar (Windows/Linux) ──
   "menubar.file": "文件", // File
   "menubar.terminal": "终端", // Terminal

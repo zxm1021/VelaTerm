@@ -369,6 +369,40 @@ const ko: typeof en = {
   "titlebar.clientSince": (time: string) => `${time}부터`, // since {time}
   "titlebar.feedback": "피드백", // Feedback
   "titlebar.share": "공유", // Share
+  // ── Shortcut buttons (title bar) ──
+  "shortcut.edit": "단축 버튼 편집", // Edit shortcut buttons
+  "shortcut.editProject": (name) => `단축 버튼 · ${name}`, // Shortcut buttons · {name}
+  "shortcut.scopeGlobal": "전역", // Global
+  "shortcut.scopeProject": "프로젝트", // Project
+  "shortcut.globalHint": "모든 프로젝트에 표시됩니다.", // Shown in every project.
+  "shortcut.projectHint": "이 프로젝트에만 표시됩니다.", // Shown only for this project.
+  "shortcut.emptyGlobal": "전역 버튼이 아직 없습니다.", // No global buttons yet.
+  "shortcut.emptyProject": "이 프로젝트에는 아직 버튼이 없습니다.", // No buttons for this project yet.
+  "shortcut.add": "추가", // Add
+  "shortcut.title": "제목", // Title
+  "shortcut.type": "동작", // Action
+  "shortcut.typeUrl": "URL", // URL
+  "shortcut.typeApp": "앱", // App
+  "shortcut.typeBash": "Bash", // Bash
+  "shortcut.valueUrl": "https://…", // https://…
+  "shortcut.valueApp": "/Applications/….app", // /Applications/….app
+  "shortcut.valueBash": "명령줄", // Command line
+  "shortcut.moveUp": "위로", // Move up
+  "shortcut.moveDown": "아래로", // Move down
+  "shortcut.remove": "삭제", // Remove
+  "shortcut.save": "저장", // Save
+  "shortcut.cancel": "취소", // Cancel
+  "shortcut.limitProject": (max) => `프로젝트당 최대 ${max}개입니다.`, // Up to {max} buttons per project.
+  "shortcut.bashWarn": "Bash 버튼은 프로젝트 디렉터리에서 실행됩니다.", // Bash buttons run in the project directory.
+  "shortcut.errBadUrl": "http:// 또는 https:// 로 시작하는 주소를 입력하세요.", // Enter an http:// or https:// address.
+  "shortcut.errOpenUrl": (title) => `“${title}”의 주소를 열 수 없습니다.`, // Could not open the address for "{title}".
+  "shortcut.errOpenApp": (path) => `${path}을(를) 열 수 없습니다.`, // Could not open {path}.
+  "shortcut.errNoProject": "이 프로젝트에는 실행할 디렉터리가 없습니다.", // This project has no directory to run in.
+  "shortcut.errCommand": (message) => `명령 실행 실패: ${message}`, // Command failed: {message}
+  "shortcut.errCommandExit": (code, detail) =>
+    detail ? `종료 코드 ${code}: ${detail}` : `종료 코드 ${code}.`, // Exited with code {code}: {detail}
+  "shortcut.errNoDirectory": "이 프로젝트의 디렉터리가 없습니다.", // This project's directory is missing.
+  "shortcut.errCommandTimeout": (seconds) => `명령이 ${seconds}초가 지나도 끝나지 않아 중지했습니다.`, // The command was still running after {seconds} seconds and was stopped.
   // ── Alt-triggered menu bar (Windows/Linux) ──
   "menubar.file": "파일", // File
   "menubar.terminal": "터미널", // Terminal

@@ -168,6 +168,29 @@ export function setNodeMark(
   return invoke("set_node_mark", { kind, id, mark: mark ?? "" });
 }
 
+/** Replace a project's title-bar shortcut buttons. Pass null to clear the project's own buttons. */
+export function setProjectShortcutButtons(
+  projectId: string,
+  buttons: string | null,
+): Promise<void> {
+  return invoke("set_project_shortcut_buttons", { projectId, buttons: buttons ?? "" });
+}
+
+/** What a shortcut button's shell command produced. */
+export interface ShortcutCommandResult {
+  exitCode: number;
+  stdout: string;
+  stderr: string;
+}
+
+/** Run a shortcut button's command in `cwd`, returning its exit code and both output streams. */
+export function runShortcutCommand(
+  cwd: string,
+  command: string,
+): Promise<ShortcutCommandResult> {
+  return invoke<ShortcutCommandResult>("run_shortcut_command", { cwd, command });
+}
+
 export interface UpdateSessionInput {
   name: string;
   shell?: string | null;

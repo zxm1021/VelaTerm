@@ -369,6 +369,40 @@ const vi: typeof en = {
   "titlebar.clientSince": (time: string) => `từ ${time}`, // since {time}
   "titlebar.feedback": "Phản hồi", // Feedback
   "titlebar.share": "Chia sẻ",
+  // ── Shortcut buttons (title bar) ──
+  "shortcut.edit": "Sửa nút thao tác nhanh", // Edit shortcut buttons
+  "shortcut.editProject": (name) => `Nút thao tác nhanh · ${name}`, // Shortcut buttons · {name}
+  "shortcut.scopeGlobal": "Toàn cục", // Global
+  "shortcut.scopeProject": "Dự án", // Project
+  "shortcut.globalHint": "Hiển thị trong mọi dự án.", // Shown in every project.
+  "shortcut.projectHint": "Chỉ hiển thị cho dự án này.", // Shown only for this project.
+  "shortcut.emptyGlobal": "Chưa có nút toàn cục nào.", // No global buttons yet.
+  "shortcut.emptyProject": "Dự án này chưa có nút nào.", // No buttons for this project yet.
+  "shortcut.add": "Thêm", // Add
+  "shortcut.title": "Tiêu đề", // Title
+  "shortcut.type": "Hành động", // Action
+  "shortcut.typeUrl": "URL", // URL
+  "shortcut.typeApp": "Ứng dụng", // App
+  "shortcut.typeBash": "Bash", // Bash
+  "shortcut.valueUrl": "https://…", // https://…
+  "shortcut.valueApp": "/Applications/….app", // /Applications/….app
+  "shortcut.valueBash": "Dòng lệnh", // Command line
+  "shortcut.moveUp": "Di chuyển lên", // Move up
+  "shortcut.moveDown": "Di chuyển xuống", // Move down
+  "shortcut.remove": "Xóa", // Remove
+  "shortcut.save": "Lưu", // Save
+  "shortcut.cancel": "Hủy", // Cancel
+  "shortcut.limitProject": (max) => `Tối đa ${max} nút mỗi dự án.`, // Up to {max} buttons per project.
+  "shortcut.bashWarn": "Nút Bash chạy trong thư mục dự án.", // Bash buttons run in the project directory.
+  "shortcut.errBadUrl": "Nhập địa chỉ bắt đầu bằng http:// hoặc https://.", // Enter an http:// or https:// address.
+  "shortcut.errOpenUrl": (title) => `Không mở được địa chỉ của “${title}”.`, // Could not open the address for "{title}".
+  "shortcut.errOpenApp": (path) => `Không mở được ${path}.`, // Could not open {path}.
+  "shortcut.errNoProject": "Dự án này không có thư mục để chạy.", // This project has no directory to run in.
+  "shortcut.errCommand": (message) => `Lệnh thất bại: ${message}`, // Command failed: {message}
+  "shortcut.errCommandExit": (code, detail) =>
+    detail ? `Thoát với mã ${code}: ${detail}` : `Thoát với mã ${code}.`, // Exited with code {code}: {detail}
+  "shortcut.errNoDirectory": "Thư mục của dự án này không tồn tại.", // This project's directory is missing.
+  "shortcut.errCommandTimeout": (seconds) => `Lệnh vẫn chạy sau ${seconds} giây và đã bị dừng.`, // The command was still running after {seconds} seconds and was stopped.
   // ── Alt-triggered menu bar (Windows/Linux) ──
   "menubar.file": "Tệp", // File
   "menubar.terminal": "Terminal",

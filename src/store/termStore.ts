@@ -127,6 +127,11 @@ import {
 } from "./settings";
 import { docKindOf, makeDocTab, type DocTab } from "./docTab";
 import { traceSplit, type SplitSource } from "./splitTrace";
+import {
+  sanitizeShortcutButtons,
+  serializeProjectShortcutButtons,
+  type ShortcutButton,
+} from "../shortcutButtons";
 
 // Re-export the public API after moving implementations to settings/docTab, preserving existing import paths.
 export { DEFAULT_MAX_LIVE_TABS } from "./settings";
@@ -1115,6 +1120,9 @@ interface TermStore {
   autoContinueAtUsageLimit: boolean;
   /** Whether the forced hydration break runs. Off by default; desktop clients only, see src/water. */
   waterReminder: boolean;
+  /** Title-bar shortcut buttons shown in every project, in display order. A project's own buttons are
+   * read from its row and appended after these; see `src/shortcutButtons.ts`. */
+  shortcutButtons: ShortcutButton[];
   /** The backend's one account-usage copy, filled by `usage://changed` and read by the Info panel.
    * Null until the first read returns; sessions never query providers themselves. */
   usage: UsageSnapshot | null;
@@ -1555,6 +1563,10 @@ interface TermStore {
   setAutoContinueAtUsageLimit: (v: boolean) => void;
   /** Enables or disables the forced hydration break. */
   setWaterReminder: (v: boolean) => void;
+  /** Replaces the global shortcut buttons shown in every project. */
+  setShortcutButtons: (buttons: ShortcutButton[]) => void;
+  /** Replaces one project's own shortcut buttons, storing them on its row. */
+  setProjectShortcutButtons: (projectId: string, buttons: ShortcutButton[]) => Promise<void>;
   /** Stores a usage snapshot received from the backend. */
   setUsage: (snap: UsageSnapshot) => void;
   /** Sets the persisted terminal renderer for new terminals. */
@@ -1765,6 +1777,7 @@ function persistAndApplyVisual(getState: () => TermStore) {
     composerInlineChips: s.composerInlineChips,
     composerInlineChipsRevision: s.composerInlineChipsRevision,
     waterReminder: s.waterReminder,
+    shortcutButtons: s.shortcutButtons,
   };
   saveSettings(ps);
   applyVisual(visualOf(ps));
@@ -4765,6 +4778,17 @@ export const useTermStore = create<TermStore>((set, get) => ({
   setWaterReminder: (v) => {
     set({ waterReminder: v });
     persistAndApplyVisual(get);
+  },
+  setShortcutButtons: (buttons) => {
+    // Sanitize on write as well as on read: the editor's own state is the only source here, but the same
+    // guarantees should hold for whatever ends up persisted.
+    set({ shortcutButtons: sanitizeShortcutButtons(buttons, null) });
+    persistAndApplyVisual(get);
+  },
+  setProjectShortcutButtons: async (projectId, buttons) => {
+    // Stored as a JSON string on the project row, so the tree reload is what refreshes the toolbar.
+    await tree.setProjectShortcutButtons(projectId, serializeProjectShortcutButtons(buttons));
+    await get().loadTree();
   },
   // The backend poller floors the interval at 30 s, so clamp here too rather than storing a value it
   // would silently ignore. Switching polling off is the `usageAutoRefresh` toggle, not a zero here.

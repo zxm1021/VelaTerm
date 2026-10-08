@@ -379,6 +379,40 @@ const ru: typeof en = {
   "titlebar.clientSince": (time: string) => `с ${time}`, // since {time}
   "titlebar.feedback": "Обратная связь", // Feedback
   "titlebar.share": "Поделиться", // Share
+  // ── Shortcut buttons (title bar) ──
+  "shortcut.edit": "Изменить кнопки быстрого доступа", // Edit shortcut buttons
+  "shortcut.editProject": (name) => `Кнопки быстрого доступа · ${name}`, // Shortcut buttons · {name}
+  "shortcut.scopeGlobal": "Глобальные", // Global
+  "shortcut.scopeProject": "Проект", // Project
+  "shortcut.globalHint": "Показываются во всех проектах.", // Shown in every project.
+  "shortcut.projectHint": "Показываются только в этом проекте.", // Shown only for this project.
+  "shortcut.emptyGlobal": "Глобальных кнопок пока нет.", // No global buttons yet.
+  "shortcut.emptyProject": "В этом проекте пока нет кнопок.", // No buttons for this project yet.
+  "shortcut.add": "Добавить", // Add
+  "shortcut.title": "Название", // Title
+  "shortcut.type": "Действие", // Action
+  "shortcut.typeUrl": "URL", // URL
+  "shortcut.typeApp": "Приложение", // App
+  "shortcut.typeBash": "Bash", // Bash
+  "shortcut.valueUrl": "https://…", // https://…
+  "shortcut.valueApp": "/Applications/….app", // /Applications/….app
+  "shortcut.valueBash": "Командная строка", // Command line
+  "shortcut.moveUp": "Вверх", // Move up
+  "shortcut.moveDown": "Вниз", // Move down
+  "shortcut.remove": "Удалить", // Remove
+  "shortcut.save": "Сохранить", // Save
+  "shortcut.cancel": "Отмена", // Cancel
+  "shortcut.limitProject": (max) => `До ${max} кнопок на проект.`, // Up to {max} buttons per project.
+  "shortcut.bashWarn": "Кнопки Bash выполняются в каталоге проекта.", // Bash buttons run in the project directory.
+  "shortcut.errBadUrl": "Укажите адрес, начинающийся с http:// или https://.", // Enter an http:// or https:// address.
+  "shortcut.errOpenUrl": (title) => `Не удалось открыть адрес «${title}».`, // Could not open the address for "{title}".
+  "shortcut.errOpenApp": (path) => `Не удалось открыть ${path}.`, // Could not open {path}.
+  "shortcut.errNoProject": "У этого проекта нет каталога для выполнения.", // This project has no directory to run in.
+  "shortcut.errCommand": (message) => `Команда завершилась ошибкой: ${message}`, // Command failed: {message}
+  "shortcut.errCommandExit": (code, detail) =>
+    detail ? `Код выхода ${code}: ${detail}` : `Код выхода ${code}.`, // Exited with code {code}: {detail}
+  "shortcut.errNoDirectory": "Каталог этого проекта отсутствует.", // This project's directory is missing.
+  "shortcut.errCommandTimeout": (seconds) => `Команда всё ещё работала через ${seconds} секунд и была остановлена.`, // The command was still running after {seconds} seconds and was stopped.
   // ── Alt-triggered menu bar (Windows/Linux) ──
   "menubar.file": "Файл", // File
   "menubar.terminal": "Терминал", // Terminal

@@ -16,11 +16,15 @@ import { env, platform } from "../../platform";
 import { useTermStore } from "../../store/termStore";
 import { runAfterInitialSettings } from "../../store/settingsWatch";
 import { resolveTheme } from "../../theme";
+import { projectRoot } from "../../types";
 import { ShareModal } from "../../components/ShareModal";
+import { parseProjectShortcutButtons, resolveShortcutProjectId } from "../../shortcutButtons";
 import { AppMenuBar } from "./AppMenuBar";
 import { ConnectRemotePanel } from "./ConnectRemotePanel";
 import { RemoteAccessPanel } from "./RemoteAccessPanel";
 import { SettingsModal } from "./SettingsModal";
+import { ShortcutButtons } from "./ShortcutButtons";
+import { ShortcutButtonsEditor } from "./ShortcutButtonsEditor";
 
 const FEEDBACK_URL = "https://velaterm.com/feedback";
 
@@ -108,6 +112,30 @@ export function TitleBar() {
   const setShareOpen = useTermStore((s) => s.setShareOpen);
   // Hidden error-log entry through Option/Alt-clicking the gear; a normal click opens settings.
   const setErrorLogOpen = useTermStore((s) => s.setErrorLogOpen);
+  // Shortcut buttons: the global list is shared, the project list follows the selected project. The
+  // store's `projects` array is what a project write refreshes, so the toolbar re-reads it from here.
+  const shortcutButtons = useTermStore((s) => s.shortcutButtons);
+  const setShortcutButtons = useTermStore((s) => s.setShortcutButtons);
+  const setProjectShortcutButtons = useTermStore((s) => s.setProjectShortcutButtons);
+  const projects = useTermStore((s) => s.projects);
+  const groups = useTermStore((s) => s.groups);
+  const sessions = useTermStore((s) => s.sessions);
+  const activeSessionId = useTermStore((s) => s.activeSessionId);
+  const selection = useTermStore((s) => s.selection);
+  const inspectTarget = useTermStore((s) => s.inspectTarget);
+  const [shortcutEditorOpen, setShortcutEditorOpen] = useState(false);
+  const shortcutProjectId = resolveShortcutProjectId({
+    projects,
+    groups,
+    sessions,
+    activeSessionId,
+    selection,
+    inspectTarget,
+  });
+  const shortcutProject = shortcutProjectId
+    ? projects.find((p) => p.id === shortcutProjectId)
+    : undefined;
+  const projectShortcutButtons = parseProjectShortcutButtons(shortcutProject?.shortcutButtons);
   const [remoteOpen, setRemoteOpen] = useState(false);
   const connectOpen = new URLSearchParams(useSharingLocation()).has("connect");
   const setConnectOpen = (open: boolean | ((value: boolean) => boolean)) => {
@@ -429,6 +457,15 @@ export function TitleBar() {
       {/* Windows/Linux have no native menu bar; this one appears on a bare Alt press. */}
       <AppMenuBar />
 
+      {/* Custom shortcut buttons sit in the true middle: one flexible spacer on each side centres them
+          regardless of how wide the brand and action groups grow. */}
+      <span className="tb-spacer" />
+      <ShortcutButtons
+        globals={shortcutButtons}
+        projectButtons={projectShortcutButtons}
+        rootPath={projectRoot(shortcutProject)}
+        onEdit={() => setShortcutEditorOpen(true)}
+      />
       <span className="tb-spacer" />
 
       <div className="tb-seg">
@@ -620,6 +657,20 @@ export function TitleBar() {
         <ConnectRemotePanel
           onClose={() => setConnectOpen(false)}
           showSharedDb={connectSharedDb}
+        />
+      )}
+      {shortcutEditorOpen && (
+        <ShortcutButtonsEditor
+          globalButtons={shortcutButtons}
+          projectButtons={projectShortcutButtons}
+          projectName={shortcutProject?.name ?? null}
+          onSaveGlobal={setShortcutButtons}
+          onSaveProject={(buttons) => {
+            // A project write needs an id; without one the editor only showed the global scope, so this
+            // cannot be reached with no project.
+            if (shortcutProjectId) void setProjectShortcutButtons(shortcutProjectId, buttons);
+          }}
+          onClose={() => setShortcutEditorOpen(false)}
         />
       )}
     </div>

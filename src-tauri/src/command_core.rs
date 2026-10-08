@@ -415,6 +415,140 @@ pub fn set_node_mark(
     Ok(())
 }
 
+/// Replaces a project's shortcut buttons. The tree broadcast lets every attached client redraw the toolbar;
+/// an empty or absent list clears the project's own buttons, leaving only the global ones.
+pub fn set_project_shortcut_buttons(
+    ctx: &AppCtx,
+    project_id: &str,
+    buttons: Option<&str>,
+) -> Result<(), String> {
+    {
+        let conn = ctx.db().conn.lock().unwrap();
+        repo::set_project_shortcut_buttons(&conn, project_id, buttons)?;
+    }
+    ctx.emit(TREE_CHANGED, ());
+    Ok(())
+}
+
+/// Longest a command's output may be before it is cut, per stream. A shortcut button's command is a
+/// one-shot whose output goes into an error message, so a runaway command must not hand the UI an
+/// unbounded string.
+const SHORTCUT_OUTPUT_CAP: usize = 64 * 1024;
+/// How long a shortcut button's command may run before it is killed.
+const SHORTCUT_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(60);
+
+/// Runs a shortcut button's command in the given directory and returns its output.
+///
+/// Unlike the conversation's `!` shell, this one answers with the exit code and both streams instead of
+/// handing the text to an agent: a shortcut button is a user-written command whose result belongs to the
+/// person who clicked it. It runs through the user's login shell, so the same `PATH` and profile apply
+/// as in a terminal. There is deliberately no cancellation handle — the timeout is what bounds it.
+pub fn run_shortcut_command(
+    ctx: &AppCtx,
+    cwd: &str,
+    command: &str,
+) -> Result<crate::models::ShortcutCommandResult, String> {
+    if command.trim().is_empty() {
+        return Err("shortcut_command_empty".into());
+    }
+    let dir = std::path::Path::new(cwd);
+    if !dir.is_dir() {
+        return Err(format!("shortcut_command_bad_cwd:{cwd}"));
+    }
+
+    // Resolve the shell the way a terminal session does, minus WSL: `wsl://` names a distribution rather
+    // than an executable, and running a one-shot command inside one would need a different launcher.
+    let data_dir = ctx.data_dir().ok();
+    let (shell, _) = crate::pty::manager::resolve_shell(SessionKind::Terminal, None, data_dir.as_deref());
+    let shell = if shell.starts_with(crate::pty::manager::WSL_SHELL_PREFIX) {
+        crate::pty::manager::default_shell(SessionKind::Terminal, data_dir.as_deref())
+    } else {
+        shell
+    };
+
+    let mut cmd = crate::host::command(&shell);
+    cmd.args(crate::agent::chat::shell::shell_args(&shell, command));
+    cmd.current_dir(dir);
+    // The login shell already reads the profile; this additionally picks up the environment the app was
+    // launched with, matching what a session's PTY gets.
+    crate::login_env::refresh_command(&mut cmd);
+    cmd.stdin(std::process::Stdio::null())
+        .stdout(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::piped());
+    // Its own process group, so a timeout kills whatever the command started rather than only the shell.
+    #[cfg(unix)]
+    {
+        use std::os::unix::process::CommandExt;
+        cmd.process_group(0);
+    }
+
+    let mut child = cmd.spawn().map_err(|e| format!("shortcut_command_spawn:{e}"))?;
+    let stdout = child.stdout.take();
+    let stderr = child.stderr.take();
+    // Drain both pipes on their own threads: a command that fills one while this side waits on the other
+    // would otherwise deadlock before the deadline is ever checked.
+    let out_reader = stdout.map(spawn_reader);
+    let err_reader = stderr.map(spawn_reader);
+
+    let started = std::time::Instant::now();
+    let status = loop {
+        match child.try_wait() {
+            Ok(Some(status)) => break Some(status),
+            Ok(None) => {}
+            Err(e) => return Err(format!("shortcut_command_wait:{e}")),
+        }
+        if started.elapsed() >= SHORTCUT_TIMEOUT {
+            crate::host::kill_process_tree(&mut child);
+            let _ = child.wait();
+            break None;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(30));
+    };
+
+    let stdout = join_reader(out_reader);
+    let stderr = join_reader(err_reader);
+    let Some(status) = status else {
+        return Err(format!("shortcut_command_timeout:{}", SHORTCUT_TIMEOUT.as_secs()));
+    };
+    Ok(crate::models::ShortcutCommandResult {
+        // A command killed by a signal reports no code; -1 says "no exit status" rather than inventing 0,
+        // which the caller would read as success.
+        exit_code: status.code().unwrap_or(-1),
+        stdout,
+        stderr,
+    })
+}
+
+/// Read one child pipe to the end on its own thread, capping what it keeps.
+fn spawn_reader(mut pipe: impl std::io::Read + Send + 'static) -> std::sync::mpsc::Receiver<String> {
+    let (sender, receiver) = std::sync::mpsc::channel();
+    std::thread::spawn(move || {
+        let mut kept = Vec::new();
+        let mut buf = [0u8; 8192];
+        loop {
+            match pipe.read(&mut buf) {
+                Ok(0) | Err(_) => break,
+                Ok(n) => {
+                    let room = SHORTCUT_OUTPUT_CAP.saturating_sub(kept.len());
+                    kept.extend_from_slice(&buf[..n.min(room)]);
+                }
+            }
+        }
+        // Lossy conversion: a command may print bytes that are not UTF-8, and dropping its output entirely
+        // over one bad byte would hide the reason it failed.
+        let _ = sender.send(String::from_utf8_lossy(&kept).into_owned());
+    });
+    receiver
+}
+
+/// Collect a reader thread's output, falling back to empty when it never reported.
+fn join_reader(reader: Option<std::sync::mpsc::Receiver<String>>) -> String {
+    match reader {
+        Some(reader) => reader.recv_timeout(SHORTCUT_TIMEOUT).unwrap_or_default(),
+        None => String::new(),
+    }
+}
+
 /// Binds an existing group to a worktree so sessions created in it afterwards start there and it shows the
 /// sidebar tag. Sessions already in the group are left alone: their working directory was copied in at creation
 /// time and changing it under a running PTY is not possible. See `repo::set_group_worktree`.

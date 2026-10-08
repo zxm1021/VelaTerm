@@ -511,6 +511,24 @@ fn dispatch_inner(app: &AppCtx, cmd: &str, args: &Value, source: &str, origin: C
             )?;
             Ok(Value::Null)
         }
+        // A project's title-bar shortcut buttons, as a JSON array string. An absent/empty value clears them.
+        "set_project_shortcut_buttons" => {
+            core::set_project_shortcut_buttons(
+                app,
+                &req_str(args, "projectId")?,
+                opt_str(args, "buttons").as_deref(),
+            )?;
+            Ok(Value::Null)
+        }
+        // Run a shortcut button's command in a project directory. The path gate keeps remote clients out
+        // of the data directory (the secret files behind the remote-access trust model). Beyond that a
+        // remote client may run commands in project directories, which it can already do through
+        // `pty_spawn` under the threat model; see the note on `create_session` below.
+        "run_shortcut_command" => {
+            let cwd = req_str(args, "cwd")?;
+            guard_remote_path(app, origin, &cwd)?;
+            to_value(core::run_shortcut_command(app, &cwd, &req_str(args, "command")?)?)
+        }
         // Binds an existing group to a worktree. Sessions already inside keep their own working directory;
         // only sessions created later inherit it.
         "set_group_worktree" => {
@@ -1491,6 +1509,62 @@ mod tests {
         assert!(tree["projects"][0]["collectionId"].is_null());
         drop(app);
         std::fs::remove_dir_all(data_dir).unwrap();
+    }
+
+    /// A project's shortcut buttons are written as one JSON string and read back on the next
+    /// `list_tree`, which is the only path the toolbar has to them. Clearing works, and a write aimed
+    /// at a project that no longer exists is an error rather than a silent no-op.
+    #[test]
+    fn project_shortcut_buttons_round_trip_through_dispatch() {
+        let app = test_ctx();
+        let data_dir = app.data_dir().unwrap();
+        let local = |cmd: &str, args: Value| dispatch(&app, cmd, &args, DESKTOP_SOURCE, CallOrigin::Local);
+        let project = local("create_virtual_project", json!({"name": "Work"})).unwrap();
+        let buttons = r#"[{"id":"a","title":"Docs","type":"url","value":"https://example.com"}]"#;
+        local("set_project_shortcut_buttons", json!({"projectId": project["id"], "buttons": buttons})).unwrap();
+        let read = |app: &AppCtx| {
+            let tree = dispatch(app, "list_tree", &json!({}), DESKTOP_SOURCE, CallOrigin::Local).unwrap();
+            tree["projects"].as_array().unwrap().iter().find(|p| p["id"] == project["id"]).unwrap()["shortcutButtons"].clone()
+        };
+        assert_eq!(read(&app), json!(buttons));
+        // An empty string is how the frontend clears the column, so it must not store an empty JSON array.
+        local("set_project_shortcut_buttons", json!({"projectId": project["id"], "buttons": ""})).unwrap();
+        assert!(read(&app).is_null());
+        assert!(local("set_project_shortcut_buttons", json!({"projectId": "missing", "buttons": buttons})).is_err());
+        drop(app);
+        std::fs::remove_dir_all(data_dir).unwrap();
+    }
+
+    /// `run_shortcut_command` runs a user-written command in a project directory and answers with the
+    /// exit code and both streams. The gate is on the directory: a remote client may run one in a
+    /// project directory (it can already reach a PTY there) but not inside the data directory, which is
+    /// where the remote-access secrets live.
+    #[test]
+    fn shortcut_commands_run_in_project_directories_only() {
+        let app = test_ctx();
+        let data_dir = app.data_dir().unwrap();
+        let local = |cmd: &str, args: Value| dispatch(&app, cmd, &args, DESKTOP_SOURCE, CallOrigin::Local);
+        // A project directory sits outside the data dir, as a real one does.
+        let project_dir = data_dir.with_file_name(format!("vlx-shortcut-project-{}", uuid::Uuid::new_v4()));
+        std::fs::create_dir_all(&project_dir).unwrap();
+        let root = project_dir.to_str().unwrap();
+
+        let ran = local("run_shortcut_command", json!({"cwd": root, "command": "echo hello; echo oops >&2"})).unwrap();
+        assert_eq!(ran["exitCode"], 0);
+        assert_eq!(ran["stdout"], "hello\n");
+        assert_eq!(ran["stderr"], "oops\n");
+        let failed = local("run_shortcut_command", json!({"cwd": root, "command": "exit 3"})).unwrap();
+        assert_eq!(failed["exitCode"], 3);
+        // An empty command and a path that is not a directory both fail before anything is spawned.
+        assert!(local("run_shortcut_command", json!({"cwd": root, "command": "   "})).is_err());
+        assert!(local("run_shortcut_command", json!({"cwd": data_dir.join("nope").to_str().unwrap(), "command": "echo hi"})).is_err());
+        // Remote: allowed in the project directory, denied inside the data directory.
+        assert!(dispatch(&app, "run_shortcut_command", &json!({"cwd": root, "command": "echo hi"}), "ws-1", CallOrigin::Remote).is_ok());
+        let denied = dispatch(&app, "run_shortcut_command", &json!({"cwd": data_dir.to_str().unwrap(), "command": "echo hi"}), "ws-1", CallOrigin::Remote);
+        assert_eq!(denied.unwrap_err(), format!("remote_path_forbidden:{}", data_dir.to_str().unwrap()));
+        drop(app);
+        std::fs::remove_dir_all(data_dir).unwrap();
+        std::fs::remove_dir_all(project_dir).unwrap();
     }
 
     #[test]

@@ -240,6 +240,12 @@ fn migrate(conn: &Connection) -> Result<(), String> {
         conn.execute("ALTER TABLE projects ADD COLUMN mark TEXT", [])
             .map_err(|e| format!("Failed to migrate projects.mark: {e}"))?;
     }
+    // Per-project shortcut buttons, stored as a JSON array string. Nullable: old databases and projects
+    // without their own buttons stay NULL, and the frontend sanitizes whatever it reads.
+    if table_exists(conn, "projects") && !column_exists(conn, "projects", "shortcut_buttons") {
+        conn.execute("ALTER TABLE projects ADD COLUMN shortcut_buttons TEXT", [])
+            .map_err(|e| format!("Failed to migrate projects.shortcut_buttons: {e}"))?;
+    }
     if table_exists(conn, "groups") && !column_exists(conn, "groups", "mark") {
         conn.execute("ALTER TABLE groups ADD COLUMN mark TEXT", [])
             .map_err(|e| format!("Failed to migrate groups.mark: {e}"))?;

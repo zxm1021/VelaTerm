@@ -370,6 +370,40 @@ const ptBR: typeof en = {
   "titlebar.clientSince": (time: string) => `desde ${time}`, // since {time}
   "titlebar.feedback": "Feedback", // Feedback
   "titlebar.share": "Compartilhar", // Share
+  // ── Shortcut buttons (title bar) ──
+  "shortcut.edit": "Editar botões de atalho", // Edit shortcut buttons
+  "shortcut.editProject": (name) => `Botões de atalho · ${name}`, // Shortcut buttons · {name}
+  "shortcut.scopeGlobal": "Global", // Global
+  "shortcut.scopeProject": "Projeto", // Project
+  "shortcut.globalHint": "Aparece em todos os projetos.", // Shown in every project.
+  "shortcut.projectHint": "Aparece apenas neste projeto.", // Shown only for this project.
+  "shortcut.emptyGlobal": "Ainda não há botões globais.", // No global buttons yet.
+  "shortcut.emptyProject": "Este projeto ainda não tem botões.", // No buttons for this project yet.
+  "shortcut.add": "Adicionar", // Add
+  "shortcut.title": "Título", // Title
+  "shortcut.type": "Ação", // Action
+  "shortcut.typeUrl": "URL", // URL
+  "shortcut.typeApp": "App", // App
+  "shortcut.typeBash": "Bash", // Bash
+  "shortcut.valueUrl": "https://…", // https://…
+  "shortcut.valueApp": "/Applications/….app", // /Applications/….app
+  "shortcut.valueBash": "Linha de comando", // Command line
+  "shortcut.moveUp": "Mover para cima", // Move up
+  "shortcut.moveDown": "Mover para baixo", // Move down
+  "shortcut.remove": "Remover", // Remove
+  "shortcut.save": "Salvar", // Save
+  "shortcut.cancel": "Cancelar", // Cancel
+  "shortcut.limitProject": (max) => `Até ${max} botões por projeto.`, // Up to {max} buttons per project.
+  "shortcut.bashWarn": "Os botões Bash são executados no diretório do projeto.", // Bash buttons run in the project directory.
+  "shortcut.errBadUrl": "Informe um endereço http:// ou https://.", // Enter an http:// or https:// address.
+  "shortcut.errOpenUrl": (title) => `Não foi possível abrir o endereço de “${title}”.`, // Could not open the address for "{title}".
+  "shortcut.errOpenApp": (path) => `Não foi possível abrir ${path}.`, // Could not open {path}.
+  "shortcut.errNoProject": "Este projeto não tem um diretório para executar.", // This project has no directory to run in.
+  "shortcut.errCommand": (message) => `Falha no comando: ${message}`, // Command failed: {message}
+  "shortcut.errCommandExit": (code, detail) =>
+    detail ? `Saiu com código ${code}: ${detail}` : `Saiu com código ${code}.`, // Exited with code {code}: {detail}
+  "shortcut.errNoDirectory": "O diretório deste projeto não existe.", // This project's directory is missing.
+  "shortcut.errCommandTimeout": (seconds) => `O comando ainda estava em execução após ${seconds} segundos e foi interrompido.`, // The command was still running after {seconds} seconds and was stopped.
   // ── Alt-triggered menu bar (Windows/Linux) ──
   "menubar.file": "Arquivo", // File
   "menubar.terminal": "Terminal",

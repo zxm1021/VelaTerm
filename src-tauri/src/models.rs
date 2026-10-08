@@ -149,6 +149,10 @@ pub struct Project {
     /// Collection containing this project; None keeps it at the top level.
     #[serde(default)]
     pub collection_id: Option<String>,
+    /// This project's shortcut buttons as a JSON array string, shown in the title bar while the project is
+    /// selected. None means the project adds no buttons of its own; the frontend parses and sanitizes it.
+    #[serde(default)]
+    pub shortcut_buttons: Option<String>,
     pub created_at: i64,
 }
 
@@ -247,6 +251,18 @@ pub struct Tree {
     pub projects: Vec<Project>,
     pub groups: Vec<Group>,
     pub sessions: Vec<Session>,
+}
+
+/// What one shortcut-button shell command produced, reported whether or not it succeeded.
+///
+/// The command's own output is part of the result rather than an error string, because a non-zero exit
+/// is a normal outcome that the toolbar reports together with the output explaining it.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ShortcutCommandResult {
+    pub exit_code: i32,
+    pub stdout: String,
+    pub stderr: String,
 }
 
 /// Node kind used by rename, delete, and move to select the target table.

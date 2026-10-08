@@ -75,6 +75,9 @@ export interface Project {
   mark?: string | null;
   /** Containing collection; absent or null means top level. */
   collectionId?: string | null;
+  /** This project's title-bar shortcut buttons as a JSON array string; absent means none of its own.
+   *  Parse it through `parseProjectShortcutButtons` rather than reading it directly. */
+  shortcutButtons?: string | null;
   createdAt: number;
 }
 

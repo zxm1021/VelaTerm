@@ -3,6 +3,7 @@
 //! SettingsModal and the store share types while reducing the size of the main store.
 
 import { pushSetting } from "../ipc/settingsSync";
+import { sanitizeShortcutButtons, type ShortcutButton } from "../shortcutButtons";
 import {
   DEFAULT_CONVERSATION_FONT_SIZE,
   DEFAULT_TERMINAL_FONT_SIZE,
@@ -227,6 +228,8 @@ export interface PersistedSettings {
   /** The revision of the default inline set that the saved list has been brought up to. A list saved
    * before a revision gains that revision's chips once; removing them again in the settings sticks. */
   composerInlineChipsRevision: number;
+  /** Title-bar shortcut buttons shown in every project. Per-project buttons live on the project row. */
+  shortcutButtons: ShortcutButton[];
 }
 
 /** Every composer chip the toolbar can show, in the order the toolbar used before the list became
@@ -308,6 +311,7 @@ const SETTINGS_DEFAULTS: PersistedSettings = {
   infoCollapsed: {},
   composerInlineChips: DEFAULT_COMPOSER_INLINE_CHIPS,
   composerInlineChipsRevision: COMPOSER_INLINE_CHIPS_REVISION,
+  shortcutButtons: [],
 };
 
 /** Keeps only known chip ids, once each and in the saved order. A missing or malformed value falls back
@@ -401,6 +405,9 @@ export function loadSettings(): PersistedSettings {
     merged.sessionTitlePrefs = sanitizeSessionTitlePrefs(parsed.sessionTitlePrefs);
     merged.referSummary = sanitizeReferSummary(parsed.referSummary);
     merged.composerInlineChips = sanitizeComposerInlineChips(parsed.composerInlineChips);
+    // The global shortcut buttons are not capped: they are shared by every project, so the per-project
+    // limit does not apply. Malformed entries are dropped rather than failing the whole settings load.
+    merged.shortcutButtons = sanitizeShortcutButtons(parsed.shortcutButtons, null);
     merged.inputLatencyLog = merged.inputLatencyLog === true;
     // Opt-in only: a truthy non-boolean from a corrupted payload must not arm a dialog that locks the client.
     merged.waterReminder = merged.waterReminder === true;

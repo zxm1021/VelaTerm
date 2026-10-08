@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS projects (
   deleted_at  INTEGER,
   mark        TEXT,
   collection_id TEXT REFERENCES projects(id) ON DELETE SET NULL,
+  shortcut_buttons TEXT,
   created_at  INTEGER NOT NULL
 );
 

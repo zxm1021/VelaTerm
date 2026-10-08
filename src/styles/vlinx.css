@@ -176,6 +176,43 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .tb-seg button { padding: 0 9px; height: 24px; color: var(--text-dim); }
 .tb-seg button.on { background: var(--accent-soft); color: var(--accent); }
 
+/* Custom shortcut buttons, centred between the brand and the action group. The row shrinks and hides
+   its labels first when the window narrows, so the brand and the window controls keep their space. */
+.tb-shortcuts { display: flex; align-items: center; gap: 4px; min-width: 0; overflow: hidden; }
+.tb-shortcuts-btn {
+  display: flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; flex: none;
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  background: var(--bg-1); color: var(--text-mid);
+  font-size: 11.5px; font-family: inherit; cursor: pointer;
+}
+.tb-shortcuts-btn:hover { background: var(--bg-hover); color: var(--text); border-color: var(--border-strong); }
+.tb-shortcuts-btn:disabled { opacity: 0.6; cursor: default; }
+.tb-shortcuts-btn.failed { border-color: var(--danger, #e5484d); color: var(--danger, #e5484d); }
+.tb-shortcuts-label { white-space: nowrap; }
+.tb-shortcuts-sep { width: 1px; height: 16px; flex: none; margin: 0 2px; background: var(--border-strong); }
+.tb-shortcuts-edit {
+  display: grid; place-items: center; width: 22px; height: 22px; flex: none;
+  border: 1px dashed var(--border); border-radius: var(--r-sm);
+  background: none; color: var(--text-dim); cursor: pointer;
+}
+.tb-shortcuts-edit:hover { background: var(--bg-hover); color: var(--text); border-style: solid; }
+.tb-shortcuts-spin {
+  width: 11px; height: 11px; flex: none; border-radius: 50%;
+  border: 1.5px solid var(--border-strong); border-top-color: var(--accent);
+  animation: tb-shortcuts-spin 0.7s linear infinite;
+}
+@keyframes tb-shortcuts-spin { to { transform: rotate(360deg); } }
+/* A failure is shown inline rather than in a dialog: the button that failed is still on screen, and a
+   modal would cover the terminal the user is working in. */
+.tb-shortcuts-error {
+  max-width: 320px; flex: none; padding: 2px 7px; border-radius: var(--r-sm);
+  background: color-mix(in oklch, var(--danger, #e5484d) 18%, transparent);
+  color: var(--danger, #e5484d); font-size: 11px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Under pressure the labels go first: the glyph and the tooltip still identify each button. */
+@media (max-width: 1100px) { .tb-shortcuts-label { display: none; } }
+
 /* Alt-triggered menu bar (Windows/Linux only; macOS uses the system menu bar). Titles sit inline in the
    title bar and each dropdown is positioned against its own title. */
 .menubar { display: flex; align-items: center; gap: 2px; margin-left: 10px; }
